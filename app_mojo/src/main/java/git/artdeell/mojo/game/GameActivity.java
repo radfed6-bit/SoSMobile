@@ -335,7 +335,7 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
         loggerView = findViewById(R.id.mainLoggerView);
         touchCharInput = findViewById(R.id.mainTouchCharInput);
         mDrawerPullButton = findViewById(R.id.drawer_button);
-        mHotbarView = findViewById(R.id.hotbar_view);
+        mHotbarView = null;
         mLoadingScreen = findViewById(R.id.main_loading_screen);
         mFloatingHud = findViewById(R.id.floating_hud);
         if (mFloatingHud != null) {

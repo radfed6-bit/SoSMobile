@@ -230,7 +230,7 @@ public class ControlLayout extends FrameLayout {
 	}
 
 
-	private void removeAllButtons() {
+	public void removeAllButtons() {
 		for(ControlInterface button : getButtonChildren()){
 			removeView(button.getControlView());
 		}

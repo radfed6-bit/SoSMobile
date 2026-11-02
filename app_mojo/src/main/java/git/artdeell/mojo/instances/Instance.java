@@ -28,7 +28,7 @@ public class Instance extends DisplayInstance {
     public String controlLayout;
     public boolean sharedData;
 
-    protected Instance() {
+    public Instance() {
     }
 
     @Override

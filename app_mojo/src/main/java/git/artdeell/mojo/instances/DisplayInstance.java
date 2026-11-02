@@ -3,16 +3,17 @@ package git.artdeell.mojo.instances;
 import java.io.File;
 
 public class DisplayInstance {
-    protected transient File mInstanceRoot;
+    public transient File mInstanceRoot;
     public String name;
     public String versionId;
+    public String version;
     public String icon;
 
     protected void sanitize() {
         sanitizeIcon();
     }
 
-    protected DisplayInstance() {
+    public DisplayInstance() {
     }
 
     protected File getInstanceIconLocation() {
