@@ -49,14 +49,20 @@ public class CallbackBridge {
 
     public static void sendMouseButton(int button, boolean status) {
         int motionButton;
-        if (button == 0 || button == MotionEvent.BUTTON_PRIMARY) {
-            motionButton = MotionEvent.BUTTON_PRIMARY;
-        } else if (button == 1 || button == MotionEvent.BUTTON_SECONDARY) {
-            motionButton = MotionEvent.BUTTON_SECONDARY;
-        } else if (button == 2 || button == MotionEvent.BUTTON_TERTIARY) {
-            motionButton = MotionEvent.BUTTON_TERTIARY;
-        } else {
-            motionButton = button;
+        switch (button) {
+            case 0:
+            case MotionEvent.BUTTON_PRIMARY:
+                motionButton = MotionEvent.BUTTON_PRIMARY;
+                break;
+            case MotionEvent.BUTTON_SECONDARY:
+                motionButton = MotionEvent.BUTTON_SECONDARY;
+                break;
+            case MotionEvent.BUTTON_TERTIARY:
+                motionButton = MotionEvent.BUTTON_TERTIARY;
+                break;
+            default:
+                motionButton = button;
+                break;
         }
         CallbackBridge.sendMouseKeycode(motionButton, CallbackBridge.getCurrentMods(), status);
     }

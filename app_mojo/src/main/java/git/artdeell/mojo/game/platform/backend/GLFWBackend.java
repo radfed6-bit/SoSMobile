@@ -50,18 +50,26 @@ public class GLFWBackend implements PlatformBackend {
     @Override
     public void sendMouseButtonEvent(int button, int action, int mods) {
         int glfwButton;
-        if (button == 0 || button == MotionEvent.BUTTON_PRIMARY) {
-            glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT;
-        } else if (button == 1 || button == MotionEvent.BUTTON_SECONDARY) {
-            glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT;
-        } else if (button == 2 || button == MotionEvent.BUTTON_TERTIARY) {
-            glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE;
-        } else if (button == MotionEvent.BUTTON_BACK) {
-            glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_4;
-        } else if (button == MotionEvent.BUTTON_FORWARD) {
-            glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_5;
-        } else {
-            glfwButton = button;
+        switch (button) {
+            case 0:
+            case MotionEvent.BUTTON_PRIMARY:
+                glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_LEFT;
+                break;
+            case MotionEvent.BUTTON_SECONDARY:
+                glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT;
+                break;
+            case MotionEvent.BUTTON_TERTIARY:
+                glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_MIDDLE;
+                break;
+            case MotionEvent.BUTTON_BACK:
+                glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_4;
+                break;
+            case MotionEvent.BUTTON_FORWARD:
+                glfwButton = LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_5;
+                break;
+            default:
+                glfwButton = button;
+                break;
         }
         GLFW.sendMouseEvent(glfwButton, action, mods);
     }

@@ -269,6 +269,9 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
 
             setTitle("SoSMobile (" + version + ")");
 
+            final String finalVersion = version;
+            final File[] finalClasspath = classpath;
+
             // Menu
             gameActionArrayAdapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.menu_ingame));
@@ -289,14 +292,14 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
             launcherGLView.setSurfaceReadyListener(() -> {
                 try {
                     Tools.runOnUiThread(() -> { if(PREF_VIRTUAL_MOUSE_START) launcherGLView.mCursorView.setVisibility(View.VISIBLE); });
-                    if(version == null || classpath == null) {
+                    if(finalVersion == null || finalClasspath == null) {
                         Tools.runOnUiThread(()->{
                             Toast.makeText(this, R.string.main_please_restart, Toast.LENGTH_LONG).show();
                             finish();
                         });
                         return;
                     }
-                    runCraft(version, classpath);
+                    runCraft(finalVersion, finalClasspath);
                 }catch (Throwable e){
                     Tools.showErrorRemote(e);
                 }
