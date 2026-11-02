@@ -8,6 +8,7 @@
 
     <!-- Padding -->
     <dimen name="padding_tiny">@dimen/_1sdp</dimen>
+    <dimen name="padding_extra_small">@dimen/_3sdp</dimen>
     <dimen name="padding_small">@dimen/_2sdp</dimen>
     <dimen name="padding_medium">@dimen/_4sdp</dimen>
     <dimen name="padding_moderate">@dimen/_6sdp</dimen>
