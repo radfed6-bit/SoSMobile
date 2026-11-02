@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_app"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_medium">
+
+    <!-- Top Navigation Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_px_arrow_left" />
+
+        <TextView
+            android:id="@+id/text_selector_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_weight="1"
+            android:text="@string/game_folder_selector_title"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_edit_path_manually"
+            style="@style/MineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_path_manually"
+            android:textSize="@dimen/_11ssp" />
+    </LinearLayout>
+
+    <!-- Current Path Display -->
+    <TextView
+        android:id="@+id/text_current_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:background="@drawable/bg_textfield"
+        android:ellipsize="start"
+        android:padding="@dimen/padding_small"
+        android:singleLine="true"
+        android:text="/storage/emulated/0"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_12ssp" />
+
+    <!-- Quick Jump Bar -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/chip_jump_storage"
+                style="@style/MineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:text="@string/quick_jump_storage"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/chip_jump_downloads"
+                style="@style/MineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:text="@string/quick_jump_downloads"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/chip_jump_app_specific"
+                style="@style/MineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:text="@string/quick_jump_app_specific"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/chip_jump_root"
+                style="@style/MineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quick_jump_root"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Directory Listing -->
+    <ListView
+        android:id="@+id/list_directories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/padding_small"
+        android:layout_weight="1"
+        android:divider="@color/divider_color"
+        android:dividerHeight="1dp" />
+
+    <!-- Live Validation Preview Card -->
+    <LinearLayout
+        android:id="@+id/card_validation_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:background="@drawable/bg_textfield"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_small">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_preview_badge"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:contentDescription="Status"
+                android:src="@drawable/ic_px_folder" />
+
+            <TextView
+                android:id="@+id/text_preview_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_weight="1"
+                android:text="@string/game_folder_invalid"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/_11ssp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_cancel_selection"
+            style="@style/MineButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/button_confirm_selection"
+            style="@style/MineButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/select_this_directory" />
+    </LinearLayout>
+
+</LinearLayout>

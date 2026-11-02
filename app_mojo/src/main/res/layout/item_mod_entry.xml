@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/padding_small"
+    android:background="@drawable/bg_textfield"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_medium">
+
+    <!-- Top Row: Icon, Warning Badge, Name, Version, Active Switch -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/image_mod_icon"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:contentDescription="Mod Icon"
+            android:src="@drawable/ic_px_folder" />
+
+        <ImageView
+            android:id="@+id/image_mod_warning"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:layout_marginStart="@dimen/padding_extra_small"
+            android:contentDescription="Warning"
+            android:src="@drawable/ic_px_memory_warning"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_mod_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_mod_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_mod_active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Subtitle Row: Author, Location Badge, Target Versions, Delete Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_extra_small"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_mod_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/text_mod_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/text_mod_target_versions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_10ssp" />
+
+        <ImageButton
+            android:id="@+id/button_delete_mod"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Uninstall"
+            android:src="@drawable/ic_px_trash" />
+    </LinearLayout>
+
+    <!-- Expandable Details Row -->
+    <LinearLayout
+        android:id="@+id/layout_mod_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_mod_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_11ssp" />
+    </LinearLayout>
+
+</LinearLayout>

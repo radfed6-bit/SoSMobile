@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<git.artdeell.mojo.input.FloatingHUDView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/floating_hud"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|end"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    android:elevation="12dp"
+    android:clickable="true"
+    android:focusable="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/hud_root_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_floating_hud">
+
+        <!-- Drag handle / Grip -->
+        <View
+            android:id="@+id/hud_drag_handle"
+            android:layout_width="12dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_hud_handle"
+            android:contentDescription="@string/hud_drag_handle" />
+
+        <!-- Quick Action Buttons Container -->
+        <LinearLayout
+            android:id="@+id/hud_actions_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Pause / Play Toggle (Space) -->
+            <ImageButton
+                android:id="@+id/btn_hud_pause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_hud_button"
+                android:src="@drawable/ic_hud_pause"
+                android:contentDescription="@string/hud_action_pause"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Game Speed Multipliers (1x-4x Cycle) -->
+            <TextView
+                android:id="@+id/btn_hud_speed"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:background="@drawable/bg_hud_button"
+                android:text="1x"
+                android:textColor="@color/primary_text"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:contentDescription="@string/hud_action_speed"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Rotate Structure (R) -->
+            <ImageButton
+                android:id="@+id/btn_hud_rotate"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_hud_button"
+                android:src="@drawable/ic_hud_rotate"
+                android:contentDescription="@string/hud_action_rotate"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Menu / Cancel (ESC) -->
+            <TextView
+                android:id="@+id/btn_hud_escape"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="3dp"
+                android:gravity="center"
+                android:background="@drawable/bg_hud_button"
+                android:text="ESC"
+                android:textColor="@color/primary_text"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:contentDescription="@string/hud_action_menu"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Soft Keyboard Toggle -->
+            <ImageButton
+                android:id="@+id/btn_hud_keyboard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_hud_button"
+                android:src="@drawable/ic_hud_keyboard"
+                android:contentDescription="@string/hud_action_keyboard"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+        <!-- Collapse / Expand Toggle Button -->
+        <ImageButton
+            android:id="@+id/btn_hud_collapse"
+            android:layout_width="28dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="2dp"
+            android:background="@drawable/bg_hud_button"
+            android:src="@drawable/ic_hud_chevron_collapse"
+            android:contentDescription="@string/hud_action_collapse"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </LinearLayout>
+
+</git.artdeell.mojo.input.FloatingHUDView>

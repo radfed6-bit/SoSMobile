@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/fragment_menu_main"
+	android:gravity="top"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@color/background_app">
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/_background_display_view">
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/center_guideline"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:orientation="vertical"
+				app:layout_constraintGuide_percent="0.5"/>
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/news_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:text="@string/mcl_tab_wiki"
+				android:drawableStart="@drawable/ic_px_book"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintEnd_toStartOf="@id/social_divider" />
+			<View
+				android:id="@+id/social_divider"
+				style="@style/LauncherFragment_Divider"
+				android:layout_marginVertical="@dimen/padding_large"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintStart_toStartOf="@id/center_guideline"
+				app:layout_constraintEnd_toEndOf="@id/center_guideline"
+				app:layout_constraintBottom_toBottomOf="@id/news_button"/>
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/social_media_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="0dp"
+				android:text="@string/mcl_button_social_media"
+				android:drawableStart="@drawable/ic_social_media"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintStart_toEndOf="@id/social_divider"
+				app:layout_constraintEnd_toEndOf="parent"/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/custom_control_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_gamepad"
+				android:text="@string/mcl_option_customcontrol"
+				app:layout_constraintTop_toBottomOf="@id/news_button" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/share_logs_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_sharelog"
+				android:text="@string/main_share_logs"
+				app:layout_constraintTop_toBottomOf="@id/custom_control_button" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/open_files_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_folder"
+				android:text="@string/mcl_button_open_directory"
+				app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/mods_button"
+				style="@style/LauncherMenuButton.Universal"
+				android:layout_width="match_parent"
+				android:drawableStart="@drawable/ic_px_folder"
+				android:text="@string/mcl_button_mods"
+				app:layout_constraintTop_toBottomOf="@id/open_files_button" />
+
+			<!-- Game Directory Card -->
+			<LinearLayout
+				android:id="@+id/card_game_directory"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginHorizontal="@dimen/padding_medium"
+				android:layout_marginTop="@dimen/padding_medium"
+				android:background="@drawable/bg_textfield"
+				android:orientation="vertical"
+				android:padding="@dimen/padding_medium"
+				app:layout_constraintTop_toBottomOf="@id/mods_button">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_vertical"
+					android:orientation="horizontal">
+
+					<ImageView
+						android:id="@+id/image_game_folder_icon"
+						android:layout_width="@dimen/_24sdp"
+						android:layout_height="@dimen/_24sdp"
+						android:src="@drawable/ic_px_folder"
+						android:contentDescription="Folder Icon" />
+
+					<TextView
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="@dimen/padding_small"
+						android:layout_weight="1"
+						android:text="@string/game_folder_title"
+						android:textColor="@color/primary_text"
+						android:textStyle="bold"
+						android:textSize="@dimen/_14ssp" />
+
+					<ImageView
+						android:id="@+id/image_validation_badge"
+						android:layout_width="@dimen/_20sdp"
+						android:layout_height="@dimen/_20sdp"
+						android:src="@drawable/ic_px_check"
+						android:contentDescription="Status" />
+				</LinearLayout>
+
+				<TextView
+					android:id="@+id/text_game_folder_path"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:ellipsize="middle"
+					android:singleLine="true"
+					android:text="/SoSMobile"
+					android:textColor="@color/secondary_text"
+					android:textSize="@dimen/_12ssp" />
+
+				<TextView
+					android:id="@+id/text_game_folder_status"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_extra_small"
+					android:text="@string/game_folder_valid"
+					android:textColor="@color/primary_text"
+					android:textSize="@dimen/_11ssp" />
+
+				<com.kdt.mcgui.MineButton
+					android:id="@+id/button_change_game_folder"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:text="@string/btn_select_game_folder" />
+			</LinearLayout>
+		</androidx.constraintlayout.widget.ConstraintLayout>
+	</ScrollView>
+
+	<!-- This view is for cosmetic purpose only -->
+	<View
+		android:id="@+id/_background_display_view"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:background="@color/background_bottom_bar"
+		android:translationZ="-1dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toTopOf="@id/play_button" />
+
+	<com.kdt.mcgui.MineButton
+		android:id="@+id/play_button"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/_62sdp"
+		android:layout_marginHorizontal="@dimen/_17sdp"
+		android:layout_marginVertical="@dimen/_15sdp"
+		android:textAllCaps="true"
+		android:text="@string/main_play"
+		app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
