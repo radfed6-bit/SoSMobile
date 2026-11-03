@@ -87,4 +87,15 @@ public class FileUtils {
     public static String escapeFileName(String name){
         return name.trim().replaceAll("[\\\\/:*?\"<>| \\t\\n]", "_");
     }
+
+    public static void copyFile(File src, File dst) throws IOException {
+        try (java.io.InputStream in = new java.io.FileInputStream(src);
+             java.io.OutputStream out = new java.io.FileOutputStream(dst)) {
+            byte[] buf = new byte[8192];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+        }
+    }
 }

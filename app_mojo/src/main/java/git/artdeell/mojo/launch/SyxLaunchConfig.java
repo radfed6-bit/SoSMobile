@@ -148,7 +148,10 @@ public class SyxLaunchConfig implements Serializable {
         sysProps.put("org.lwjgl.system.SharedLibraryExtractPath", cacheDir + "/lwjgl_native");
         sysProps.put("org.lwjgl.system.allocator", "system");
         sysProps.put("org.lwjgl.opengl.libname", "libGLMojo.so");
-        sysProps.put("org.lwjgl.glfw.libname", "libglfw.so");
+        sysProps.put("org.lwjgl.glfw.libname", appNativeDir + "/libglfw.so");
+        sysProps.put("org.lwjgl.stb.libname", appNativeDir + "/liblwjgl_stb.so");
+        sysProps.put("org.lwjgl.tinyfd.libname", appNativeDir + "/liblwjgl_tinyfd.so");
+        sysProps.put("org.lwjgl.nuklear.libname", appNativeDir + "/liblwjgl_nuklear.so");
         sysProps.put("org.lwjgl.librarypath", appNativeDir);
         sysProps.put("java.library.path", appNativeDir);
         sysProps.put("jna.boot.library.path", appNativeDir);
@@ -172,8 +175,11 @@ public class SyxLaunchConfig implements Serializable {
         javaArgs.add("-Djava.awt.headless=true");
         javaArgs.add("-Djava.library.path=" + appNativeDir);
         javaArgs.add("-Dorg.lwjgl.librarypath=" + appNativeDir);
-        javaArgs.add("-Dorg.lwjgl.glfw.libname=libglfw.so");
+        javaArgs.add("-Dorg.lwjgl.glfw.libname=" + appNativeDir + "/libglfw.so");
         javaArgs.add("-Dorg.lwjgl.opengl.libname=libGLMojo.so");
+        javaArgs.add("-Dorg.lwjgl.stb.libname=" + appNativeDir + "/liblwjgl_stb.so");
+        javaArgs.add("-Dorg.lwjgl.tinyfd.libname=" + appNativeDir + "/liblwjgl_tinyfd.so");
+        javaArgs.add("-Dorg.lwjgl.nuklear.libname=" + appNativeDir + "/liblwjgl_nuklear.so");
         javaArgs.add("-Dorg.lwjgl.system.SharedLibraryExtractPath=" + cacheDir + "/lwjgl_native");
         javaArgs.add("-cp");
         javaArgs.add(String.join(File.pathSeparator, classpath));

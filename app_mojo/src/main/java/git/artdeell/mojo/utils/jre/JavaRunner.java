@@ -124,6 +124,9 @@ public class JavaRunner {
                 "-Dorg.lwjgl.vulkan.libname=libvulkan.so",
                 "-Dorg.lwjgl.spvc.libname=spirv-cross-c-shared",
                 "-Dorg.lwjgl.sdl.libname=" + new File(NATIVE_LIB_DIR, "libSDL3.so").getAbsolutePath(),
+                "-Dorg.lwjgl.stb.libname=" + new File(NATIVE_LIB_DIR, "liblwjgl_stb.so").getAbsolutePath(),
+                "-Dorg.lwjgl.tinyfd.libname=" + new File(NATIVE_LIB_DIR, "liblwjgl_tinyfd.so").getAbsolutePath(),
+                "-Dorg.lwjgl.nuklear.libname=" + new File(NATIVE_LIB_DIR, "liblwjgl_nuklear.so").getAbsolutePath(),
                 "-Dorg.lwjgl.system.allocator=system",
                 //LWJGL 3 DEBUG FLAGS
                 //"-Dorg.lwjgl.util.Debug=true",
