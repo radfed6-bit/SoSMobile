@@ -58,35 +58,38 @@ jobs:
 
       - name: Build SoSMobile Debug APK
         run: |
+          VERSION="${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.1' }}"
           gradle :app_mojo:assembleFullDebug
-          mv app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk out/SoSMobile-debug.apk
+          mv app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk "out/SoSMobile-${VERSION}.apk"
 
       - name: Build Debug APK (No runtime)
         run: |
+          VERSION="${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.1' }}"
           gradle :app_mojo:assembleNoruntimeDebug
-          mv app_mojo/build/outputs/apk/noruntime/debug/app_mojo-noruntime-debug.apk out/SoSMobile-noruntime-debug.apk
+          mv app_mojo/build/outputs/apk/noruntime/debug/app_mojo-noruntime-debug.apk "out/SoSMobile-noruntime-${VERSION}.apk"
 
       - name: Generate Checksums
         run: |
           cd out
-          sha256sum SoSMobile-debug.apk > SoSMobile-debug.apk.sha256
-          sha256sum SoSMobile-noruntime-debug.apk > SoSMobile-noruntime-debug.apk.sha256
+          VERSION="${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.1' }}"
+          sha256sum "SoSMobile-${VERSION}.apk" > "SoSMobile-${VERSION}.apk.sha256"
+          sha256sum "SoSMobile-noruntime-${VERSION}.apk" > "SoSMobile-noruntime-${VERSION}.apk.sha256"
 
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SoSMobile-debug-apk
+          name: SoSMobile-apk
           path: |
-            out/SoSMobile-debug.apk
-            out/SoSMobile-debug.apk.sha256
+            out/SoSMobile-v*.apk
+            out/SoSMobile-v*.apk.sha256
 
       - name: Upload Noruntime APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SoSMobile-noruntime-debug-apk
+          name: SoSMobile-noruntime-apk
           path: |
-            out/SoSMobile-noruntime-debug.apk
-            out/SoSMobile-noruntime-debug.apk.sha256
+            out/SoSMobile-noruntime-v*.apk
+            out/SoSMobile-noruntime-v*.apk.sha256
 
       - name: Create Automatic GitHub Release
         if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
@@ -94,7 +97,7 @@ jobs:
         continue-on-error: true
         with:
           name: SoSMobile Development Release (${{ github.ref_name }})
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.0-beta' }}
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || 'v0.1.1' }}
           prerelease: true
           draft: false
           body: |
@@ -111,10 +114,8 @@ jobs:
             - **Runtime**: OpenJDK 17 + LWJGL 3.4.1 + OpenGL 3.3 Core Profile
 
             ### Included Assets:
-            - `SoSMobile-debug.apk`: Full launcher build with bundled OpenJDK 17 runtime
-            - `SoSMobile-noruntime-debug.apk`: Thin launcher variant
+            - `SoSMobile-v0.1.1.apk`: Full launcher build with bundled OpenJDK 17 runtime
+            - `SoSMobile-noruntime-v0.1.1.apk`: Thin launcher variant
           files: |
-            out/SoSMobile-debug.apk
-            out/SoSMobile-debug.apk.sha256
-            out/SoSMobile-noruntime-debug.apk
-            out/SoSMobile-noruntime-debug.apk.sha256
+            out/SoSMobile-*.apk
+            out/SoSMobile-*.apk.sha256
