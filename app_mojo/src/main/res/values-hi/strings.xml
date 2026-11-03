@@ -21,7 +21,7 @@
     <string name="alerttitle_installmod">मॉड इंस्टॉलर को चुने</string>
 
     <!-- Error messages -->
-    <string name="error_fatal">मोजो लांचर अप्रत्याशित क्रैश हो गया है</string>
+    <string name="error_fatal">SoSMobile अप्रत्याशित क्रैश हो गया है</string>
     <string name="error_no_version">कोई संस्करण नहीं!</string>
     <string name="error_show_more">ज्यादा दिखाएँ </string>
     <string name="error_show_less">कम दिखाएँ</string>
@@ -236,7 +236,7 @@
     <string name="color_default_hex" translatable="false">FFFF0000</string>
     <string name="notif_channel_name">सामान्य</string>
     <string name="notif_channel_id" translatable="false">channel_id</string>
-    <string name="lazy_service_default_title">मोजो फोरग्राउंड सर्विस</string>
+    <string name="lazy_service_default_title">SoSMobile फोरग्राउंड सर्विस</string>
     <string name="mcl_setting_veroption_installed">इंस्टॉल किया गया</string>
     <string name="use_global_default">(ग्लोबल डिफ़ॉल्ट का उपयोग करें)</string>
     <string name="default_control">डिफ़ॉल्ट कंट्रोलमैप</string>
@@ -333,7 +333,7 @@
     <string name="modpack_download_downloading_mods">मॉड्स डाउनलोड हो रहे हैं (%.2f MB / %.2f MB)</string>
     <string name="modpack_download_downloading_mods_fc">मॉड्स डाउनलोड हो रहे हैं (फ़ाइल %d/%d)</string>
     <string name="modpack_download_applying_overrides">ओवरराइड्स लागू हो रहे हैं (%d/%d)</string>
-    <string name="modpack_install_notification_title">मोजो मॉडपैक इंस्टॉलर</string>
+    <string name="modpack_install_notification_title">SoSMobile मॉडपैक इंस्टॉलर</string>
     <string name="modpack_install_notification_success">मॉडपैक इंस्टॉलेशन पूरा करने के लिए यहां क्लिक करें</string>
     <string name="modpack_install_notification_data_not_available">मॉड लोडर जानकारी डाउनलोड करने में विफल</string>
     <string name="modpack_install_modloader_download_failed">मॉड लोडर फ़ाइलें डाउनलोड करने में विफल</string>
@@ -362,7 +362,7 @@
     <string name="preference_category_miscellaneous">अन्य सेटिंग्स</string>
     <string name="preference_category_video">वीडियो सेटिंग्स</string>
     <string name="notification_permission_dialog_title">अनुमति अनुरोध</string>
-    <string name="notification_permission_dialog_text">जब आप ऐप से बाहर निकलते हैं तो गेम/मॉडपैक डाउनलोड्स को रुकने से रोकने के लिए मोजो लॉन्चर को नोटिफिकेशन्स पोस्ट करने की अनुमति चाहिए। इस अनुमति के बिना, जब आप मोजो लॉन्चर को बैकग्राउंड मोड में डालते हैं तो Android आपके डाउनलोड्स को बंद कर सकता है।</string>
+    <string name="notification_permission_dialog_text">जब आप ऐप से बाहर निकलते हैं तो गेम/मॉडपैक डाउनलोड्स को रुकने से रोकने के लिए SoSMobile को नोटिफिकेशन्स पोस्ट करने की अनुमति चाहिए। इस अनुमति के बिना, जब आप मोजो लॉन्चर को बैकग्राउंड मोड में डालते हैं तो Android आपके डाउनलोड्स को बंद कर सकता है।</string>
     <string name="notification_permission_toast">आप सेटिंग्स में जाकर बाद में कभी भी अपना मन बदल सकते हैं।</string>
     <string name="preference_ask_for_notification_title">नोटिफिकेशन्स की अनुमति दें</string>
     <string name="preference_ask_for_notification_description">नोटिफिकेशन अनुमति को फिर से रिक्वेस्ट करने के लिए क्लिक करें, गेम/मॉडपैक बैकग्राउंड डाउनलोड्स के सही ढंग से काम करने के लिए इसकी आवश्यकता है।</string>

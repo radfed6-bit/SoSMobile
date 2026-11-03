@@ -39,3 +39,5 @@ app_mojo/src/main/assets/components/jre
 .agents/
 __pycache__/
 *.pyc
+task.txt
+latestlog.txt

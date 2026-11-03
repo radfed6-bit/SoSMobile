@@ -3,6 +3,7 @@
 **Android Launcher for Songs of Syx**
 
 [![Platform: ARM64](https://img.shields.io/badge/Platform-ARM64%20%2F%20aarch64-blue.svg)](https://github.com/radfed6-bit/SoSMobile)
+[![Release: v0.1.1](https://img.shields.io/badge/Release-v0.1.1-brightgreen.svg)](https://github.com/radfed6-bit/SoSMobile/releases/tag/v0.1.1)
 [![Android API](https://img.shields.io/badge/Android-API%2021%2B%20(Recommended%2026%2B)-green.svg)](https://developer.android.com)
 [![JDK: OpenJDK 17](https://img.shields.io/badge/JDK-OpenJDK%2017-orange.svg)](https://adoptium.net)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPLv3-brightgreen.svg)](https://www.gnu.org/licenses/lgpl-3.0)
@@ -62,7 +63,7 @@ SoSMobile provides a complete desktop Java runtime environment and translation l
 3. Copy the entire `Songs of Syx` folder to your device's internal storage (e.g. `/storage/emulated/0/SoSMobile/` or `/storage/emulated/0/SongsOfSyx/`).
 
 ### 2. Install & Configure SoSMobile
-1. Download and install the latest **SoSMobile** APK on your device.
+1. Download and install the latest **SoSMobile** APK (`v0.1.1`) from [GitHub Releases](https://github.com/radfed6-bit/SoSMobile/releases/tag/v0.1.1) on your device.
 2. Launch SoSMobile. When prompted on Android 11+, grant **All Files Access** (`MANAGE_EXTERNAL_STORAGE`) so the launcher can read game assets and write save files.
 3. On the main screen, tap **Select Game Directory** and navigate to the folder where you placed the game files.
 4. Tap **Select Current Directory**. SoSMobile will validate `SongsOfSyx.jar` and `base/data.zip`.
@@ -101,7 +102,7 @@ SoSMobile provides a complete desktop Java runtime environment and translation l
 
 3. The generated APK will be available in:
    ```
-   app_mojo/build/outputs/apk/debug/app_mojo-debug.apk
+   app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk
    ```
 
 ---

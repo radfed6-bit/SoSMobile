@@ -3,6 +3,7 @@
 **Android-лаунчер для Songs of Syx**
 
 [![Платформа: ARM64](https://img.shields.io/badge/Platform-ARM64%20%2F%20aarch64-blue.svg)](https://github.com/radfed6-bit/SoSMobile)
+[![Релиз: v0.1.1](https://img.shields.io/badge/%D0%A0%D0%B5%D0%BB%D0%B8%D0%B7-v0.1.1-brightgreen.svg)](https://github.com/radfed6-bit/SoSMobile/releases/tag/v0.1.1)
 [![Android API](https://img.shields.io/badge/Android-API%2021%2B%20(%D1%80%D0%B5%D0%BA%D0%BE%D0%BC%D0%B5%D0%BD%D0%B4%D1%83%D0%B5%D1%82%D1%81%D1%8F%2026%2B)-green.svg)](https://developer.android.com)
 [![JDK: OpenJDK 17](https://img.shields.io/badge/JDK-OpenJDK%2017-orange.svg)](https://adoptium.net)
 [![Лицензия: LGPL v3](https://img.shields.io/badge/License-LGPLv3-brightgreen.svg)](https://www.gnu.org/licenses/lgpl-3.0)
@@ -62,7 +63,7 @@
 3. Скопируйте всю папку `Songs of Syx` в память мобильного устройства (например, в `/storage/emulated/0/SoSMobile/` или `/storage/emulated/0/SongsOfSyx/`).
 
 ### 2. Установка и настройка лаунчера
-1. Скачайте и установите APK-файл **SoSMobile** на устройство.
+1. Скачайте и установите APK-файл **SoSMobile** (версия `v0.1.1`) из [GitHub Releases](https://github.com/radfed6-bit/SoSMobile/releases/tag/v0.1.1) на устройство.
 2. Запустите SoSMobile. На Android 11 и новее предоставьте разрешение на **доступ ко всем файлам** (`MANAGE_EXTERNAL_STORAGE`), необходимое для чтения ресурсов игры и сохранения прогресса.
 3. На главном экране нажмите кнопку **Выбрать папку с игрой** и укажите каталог, куда были скопированы файлы игры.
 4. Нажмите **Выбрать текущую директорию**. Лаунчер проверит наличие `SongsOfSyx.jar` и `base/data.zip` и подтвердит корректность папки.
@@ -101,7 +102,7 @@
 
 3. Готовый APK-файл будет находиться по пути:
    ```
-   app_mojo/build/outputs/apk/debug/app_mojo-debug.apk
+   app_mojo/build/outputs/apk/full/debug/app_mojo-full-debug.apk
    ```
 
 ---

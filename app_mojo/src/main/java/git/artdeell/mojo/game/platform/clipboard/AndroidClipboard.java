@@ -40,6 +40,6 @@ public class AndroidClipboard implements GLFWClipboard, SDLClipboard {
      */
     @Override
     public void setClipboardString(String content) {
-        mClipboardManager.setPrimaryClip(ClipData.newPlainText("MJ Paste", content));
+        mClipboardManager.setPrimaryClip(ClipData.newPlainText("SoSMobile Paste", content));
     }
 }

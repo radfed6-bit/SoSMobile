@@ -198,7 +198,7 @@
     <string name="pedit_java_runtime">Java 런타임</string>
     <string name="pedit_renderer">렌더러</string>
     <string name="notif_channel_name">일반</string>
-    <string name="lazy_service_default_title">MJ 포그라운드 서비스</string>
+    <string name="lazy_service_default_title">SoSMobile 포그라운드 서비스</string>
     <string name="mcl_setting_veroption_installed">이미 설치되어 있는 버전입니다.</string>
     <string name="use_global_default">(글로벌 기본값 사용)</string>
     <string name="default_control">기본 조작</string>

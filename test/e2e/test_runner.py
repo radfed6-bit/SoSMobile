@@ -29,6 +29,7 @@ TIER_DIRS = {
     2: ("Tier 2: Boundary Value Analysis & Corner Cases", TEST_DIR / "tier2_boundaries"),
     3: ("Tier 3: Cross-Feature Combinations", TEST_DIR / "tier3_pairwise"),
     4: ("Tier 4: Real-World Application Scenarios", TEST_DIR / "tier4_scenarios"),
+    5: ("Tier 5: Adversarial Stress Testing & Coverage Hardening", TEST_DIR / "tier5_adversarial"),
 }
 
 
@@ -95,8 +96,13 @@ def main():
     parser.add_argument(
         "--tier",
         type=int,
-        choices=[1, 2, 3, 4],
-        help="Run only a specific tier (1, 2, 3, or 4). Default: run all tiers."
+        choices=[1, 2, 3, 4, 5],
+        help="Run only a specific tier (1, 2, 3, 4, or 5). Default: run tiers 1-4."
+    )
+    parser.add_argument(
+        "--all-tiers",
+        action="store_true",
+        help="Run all tiers including Tier 5 adversarial stress testing."
     )
     parser.add_argument(
         "-v", "--verbose",
@@ -105,7 +111,13 @@ def main():
     )
     args = parser.parse_args()
 
-    tiers_to_run = [args.tier] if args.tier else [1, 2, 3, 4]
+    if args.tier:
+        tiers_to_run = [args.tier]
+    elif args.all_tiers:
+        tiers_to_run = [1, 2, 3, 4, 5]
+    else:
+        tiers_to_run = [1, 2, 3, 4]
+
 
     print("\033[1;35m" + "#" * 75)
     print("  SoSMobile End-to-End Test Suite Execution Harness")
@@ -148,7 +160,8 @@ def main():
     print(f"  Total Duration:      {overall_elapsed:.3f}s")
     print("=" * 75)
 
-    if total_failed == 0 and total_errors == 0 and total_run >= 127:
+    min_expected = 1 if args.tier else 127
+    if total_failed == 0 and total_errors == 0 and total_run >= min_expected:
         print("\033[1;92m✔ ALL E2E TESTS PASSED SUCCESSFULLY! Exit code: 0\033[0m\n")
         sys.exit(0)
     else:

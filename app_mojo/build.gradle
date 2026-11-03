@@ -17,20 +17,7 @@ static def getDateSeconds() {
 }
 
 def getVersionName = {
-    def dateToday = getDate()
-    try {
-        def currentBranch = grgit.branch.current()
-        def latestCommit = grgit.log(maxCommits: 1)
-        if(currentBranch == null || latestCommit == null) {
-            return "SoSMobile-LOCAL-${dateToday}"
-        } else {
-            def branchName = currentBranch.getName()
-            def commitAbbreviation = latestCommit.abbreviatedId
-            return "SoSMobile-${dateToday}-${commitAbbreviation}-${branchName}"
-        }
-    } catch (Throwable t) {
-        return "SoSMobile-LOCAL-${dateToday}"
-    }
+    return "0.1.1"
 }
 
 configurations {
@@ -75,7 +62,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 36
         versionCode getDateSeconds()
-        versionName getVersionName()
+        versionName "0.1.1"
         multiDexEnabled false //important
         resValue 'string', 'group_id', 'git.artdeell'
     }
