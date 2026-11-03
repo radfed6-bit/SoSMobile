@@ -131,7 +131,23 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
                 return;
             }
         }
-        mGameRenderer = new GameRenderer(instance.getLaunchRenderer());
+        String launchRenderer = instance.getLaunchRenderer();
+        if (git.artdeell.mojo.game.renderer.def.Renderers.GL4ES_RENDERER.equals(launchRenderer)) {
+            // Songs of Syx requires OpenGL 3.3 Core Profile. GL4ES only supports OpenGL 2.1.
+            // If modern renderers (Zink or OpenLTW) are available on this device, auto-upgrade.
+            git.artdeell.mojo.game.renderer.RenderSpec zinkSpec = GameRenderer.getKnownRenderer(git.artdeell.mojo.game.renderer.def.Renderers.ZINK_RENDERER);
+            git.artdeell.mojo.game.renderer.RenderSpec ltwSpec = GameRenderer.getKnownRenderer(git.artdeell.mojo.game.renderer.def.Renderers.LTW_RENDERER);
+            if (zinkSpec != null && zinkSpec.compatibleDevice(this)) {
+                Log.i("GameActivity", "GL4ES only supports OpenGL 2.1, but Songs of Syx requires OpenGL 3.3+. Auto-selecting Zink (Vulkan).");
+                Logger.appendToLog("Auto-upgrading renderer from GL4ES (OpenGL 2.1) to Zink (OpenGL 4.6 via Vulkan) for OpenGL 3.3 support.");
+                launchRenderer = git.artdeell.mojo.game.renderer.def.Renderers.ZINK_RENDERER;
+            } else if (ltwSpec != null && ltwSpec.compatibleDevice(this)) {
+                Log.i("GameActivity", "GL4ES only supports OpenGL 2.1, but Songs of Syx requires OpenGL 3.3+. Auto-selecting OpenLTW.");
+                Logger.appendToLog("Auto-upgrading renderer from GL4ES (OpenGL 2.1) to OpenLTW (OpenGL 3.2+ Core) for OpenGL 3.3 support.");
+                launchRenderer = git.artdeell.mojo.game.renderer.def.Renderers.LTW_RENDERER;
+            }
+        }
+        mGameRenderer = new GameRenderer(launchRenderer);
 
         if(!PREF_ZINK_PREFER_SYSTEM_DRIVER) {
             mGameRenderer.overrideVulkanDriver();
