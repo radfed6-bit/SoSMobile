@@ -104,6 +104,18 @@ public class GameRenderer {
             return;
         }
         currentRenderer.setupEnvironment(context, environment);
+
+        // Allow user-specified environment overrides from Custom Java Arguments (e.g. MESA_GL_VERSION_OVERRIDE=3.3)
+        if (LauncherPreferences.PREF_CUSTOM_JAVA_ARGS != null) {
+            for (String token : LauncherPreferences.PREF_CUSTOM_JAVA_ARGS.split("[\\s\n\r]+")) {
+                if (token.contains("=") && !token.startsWith("-")) {
+                    String[] parts = token.split("=", 2);
+                    if (parts.length == 2 && !parts[0].isEmpty()) {
+                        environment.put(parts[0], parts[1]);
+                    }
+                }
+            }
+        }
         for(Map.Entry<String, String> e : environment.entrySet()) {
             Logger.appendToLog("Added renderer env: " + e.getKey() + '=' + e.getValue());
             Os.setenv(e.getKey(), e.getValue(), true);

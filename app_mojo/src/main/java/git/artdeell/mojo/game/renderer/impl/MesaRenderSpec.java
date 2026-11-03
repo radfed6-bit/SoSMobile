@@ -58,11 +58,9 @@ public class MesaRenderSpec implements RenderSpec {
         }
         public void setupEnvironment(Context context, Map<String, String> envMap) {
             envMap.put("MESA_LOADER_DRIVER_OVERRIDE", "zink");
-            // This is needed because mobile drivers often don't implement required features for zink
-            // hence making it fall back to OpenGL 2.1 and break the modern game completely
-            // We don't care much about passing CTS hence this is fine
-            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "460");
-            envMap.put("MESA_GL_VERSION_OVERRIDE", "4.6");
+            // Songs of Syx targets OpenGL 3.3 Core Profile with GLSL 330.
+            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "330");
+            envMap.put("MESA_GL_VERSION_OVERRIDE", "3.3");
             super.setupEnvironment(context, envMap);
         }
         public boolean setupRenderer() {
@@ -148,8 +146,9 @@ public class MesaRenderSpec implements RenderSpec {
         }
         public void setupEnvironment(Context context, Map<String, String> envMap) {
             super.setupEnvironment(context, envMap);
-            envMap.put("MESA_GL_VERSION_OVERRIDE", "4.3");
-            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "460");
+            // Songs of Syx targets OpenGL 3.3 Core Profile with GLSL 330.
+            envMap.put("MESA_GL_VERSION_OVERRIDE", "3.3");
+            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "330");
             envMap.put("MESA_LOADER_DRIVER_OVERRIDE", "zink");
         }
         public boolean setupRenderer() {

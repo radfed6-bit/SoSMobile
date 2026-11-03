@@ -66,8 +66,8 @@
     <string name="mcl_setting_category_renderer">Renderer</string>
     <string name="mcl_setting_renderer_gles2_4">GL4ES (OpenGL 2.1) - Incompatible (Needs OpenGL 3.3+)</string>
     <string name="mcl_setting_renderer_ltw">OpenLTW (OpenGL ES 3) - Experimental</string>
-    <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - Recommended (OpenGL 4.6)</string>
-    <string name="mcl_setting_renderer_vulkan_lzink">Legacy Zink (Vulkan) - Recommended for Mali</string>
+    <string name="mcl_setting_renderer_vulkan_lzink">Legacy Zink (Vulkan) - Recommended for Mali (OpenGL 3.3)</string>
+    <string name="mcl_setting_renderer_vulkan_zink">Zink (Vulkan) - OpenGL 3.3</string>
     <string name="mcl_setting_renderer_freedreno_kgsl">Freedreno (KGSL) - all versions</string>
     <string name="mcl_setting_renderer_mesa_desktop">Mesa (DRM) - all versions</string>
     <string name="mcl_setting_renderer_mesa_desktop_ext">Mesa (DRM, external) - all versions</string>
