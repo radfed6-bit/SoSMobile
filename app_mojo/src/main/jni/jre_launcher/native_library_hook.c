@@ -7,6 +7,8 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <limits.h>
 #include <jvm_hooks/jvm_hooks.h>
 #include "elf_hinter.h"
 #include "load_stages.h"
@@ -32,6 +34,83 @@ union {
     void* generic;
 } original_func;
 
+static char native_lib_dir[PATH_MAX] = {0};
+
+static void init_native_lib_dir() {
+    if(native_lib_dir[0] != 0) return;
+    Dl_info info;
+    if(dladdr((void*)init_native_lib_dir, &info) && info.dli_fname != NULL) {
+        char buf[PATH_MAX];
+        strncpy(buf, info.dli_fname, sizeof(buf) - 1);
+        buf[sizeof(buf) - 1] = 0;
+        char* last_slash = strrchr(buf, '/');
+        if(last_slash != NULL) {
+            *last_slash = 0;
+            strncpy(native_lib_dir, buf, sizeof(native_lib_dir) - 1);
+            native_lib_dir[sizeof(native_lib_dir) - 1] = 0;
+            LOGI("Detected native library directory via dladdr: %s", native_lib_dir);
+            return;
+        }
+    }
+    const char* ld = getenv("LD_LIBRARY_PATH");
+    if(ld != NULL) {
+        const char* colon = strchr(ld, ':');
+        size_t len = colon ? (size_t)(colon - ld) : strlen(ld);
+        if(len > 0 && len < sizeof(native_lib_dir)) {
+            memcpy(native_lib_dir, ld, len);
+            native_lib_dir[len] = 0;
+            LOGI("Detected native library directory via LD_LIBRARY_PATH: %s", native_lib_dir);
+        }
+    }
+}
+
+static jstring resolve_native_library(JNIEnv *env, jstring name, char resolved_path[PATH_MAX]) {
+    init_native_lib_dir();
+    const char *name_n = (*env)->GetStringUTFChars(env, name, NULL);
+    if(name_n == NULL) {
+        resolved_path[0] = 0;
+        return name;
+    }
+
+    const char* filename = strrchr(name_n, '/');
+    if(filename == NULL) filename = name_n;
+    else filename++;
+
+    char soname[256];
+    if(strncmp(filename, "lib", 3) != 0) {
+        snprintf(soname, sizeof(soname), "lib%s.so", filename);
+    } else {
+        strncpy(soname, filename, sizeof(soname) - 1);
+        soname[sizeof(soname) - 1] = 0;
+    }
+
+    bool redirected = false;
+    if(native_lib_dir[0] != 0) {
+        char candidate[PATH_MAX];
+        snprintf(candidate, sizeof(candidate), "%s/%s", native_lib_dir, soname);
+        if(access(candidate, R_OK) == 0) {
+            if(strcmp(name_n, candidate) != 0) {
+                LOGI("Redirecting native library load: %s -> %s", name_n, candidate);
+                strncpy(resolved_path, candidate, PATH_MAX - 1);
+                resolved_path[PATH_MAX - 1] = 0;
+                redirected = true;
+            }
+        }
+    }
+
+    if(!redirected) {
+        strncpy(resolved_path, name_n, PATH_MAX - 1);
+        resolved_path[PATH_MAX - 1] = 0;
+    }
+
+    (*env)->ReleaseStringUTFChars(env, name, name_n);
+
+    if(redirected) {
+        return (*env)->NewStringUTF(env, resolved_path);
+    }
+    return name;
+}
+
 static void library_preload_hook(JNIEnv *env, const char* name) {
     const char* lib_filename = strrchr(name, '/');
     if(lib_filename == NULL) lib_filename = name;
@@ -45,28 +124,31 @@ static void library_preload_hook(JNIEnv *env, const char* name) {
 
 #define NATIVES_HOOK(CALLTHROUGH, RESULT, RESULT_RETURN) \
 do { \
-    const char *name_n = (*env)->GetStringUTFChars(env, name, NULL); \
-    library_preload_hook(env, name_n); \
+    char resolved_path[PATH_MAX]; \
+    jstring target_name = resolve_native_library(env, name, resolved_path); \
+    library_preload_hook(env, resolved_path); \
     const bool hintsRequired = apiRequiresHints(); \
     hinter_t hinter; \
-    if (hintsRequired) hinter_process(&hinter, name_n); \
-    (*env)->ReleaseStringUTFChars(env, name, name_n); \
+    if (hintsRequired) hinter_process(&hinter, resolved_path); \
     RESULT CALLTHROUGH; \
     if (hintsRequired) hinter_free(&hinter); \
+    if (target_name != name) { \
+        (*env)->DeleteLocalRef(env, target_name); \
+    } \
     RESULT_RETURN \
 } while(0);
 
 
 static jboolean hook_NativeLibraries_load(JNIEnv *env, jclass cls, jobject lib, jstring name, jboolean isBuiltin, jboolean throwExceptionIfFail) {
-    NATIVES_HOOK(original_func.j21(env, cls, lib, name, isBuiltin, throwExceptionIfFail), jboolean result =, return result;)
+    NATIVES_HOOK(original_func.j21(env, cls, lib, target_name, isBuiltin, throwExceptionIfFail), jboolean result =, return result;)
 }
 
 static jboolean hook_j17_NativeLibraries_load(JNIEnv *env, jclass cls, jobject lib, jstring name, jboolean isBuiltin, jboolean isJNI, jboolean throwExceptionIfFail) {
-    NATIVES_HOOK(original_func.j17(env, cls, lib, name, isBuiltin, isJNI, throwExceptionIfFail), jboolean result =, return result;)
+    NATIVES_HOOK(original_func.j17(env, cls, lib, target_name, isBuiltin, isJNI, throwExceptionIfFail), jboolean result =, return result;)
 }
 
 static void hook_ClassLoader_00024NativeLibrary_load(JNIEnv *env, jobject this, jstring name, jboolean isBuiltin) {
-    NATIVES_HOOK(original_func.j8(env, this, name, isBuiltin),,)
+    NATIVES_HOOK(original_func.j8(env, this, target_name, isBuiltin),,)
 }
 
 static bool testMethod(JNIEnv *vm_env, jclass hookClass, const char* sign, JNINativeMethod* hookMethod) {

@@ -9,6 +9,8 @@
 #include <dlfcn.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
 
 #define TAG __FILE_NAME__
 #include <log.h>
@@ -37,8 +39,30 @@ static jlong ndlopen_bugfix(__attribute__((unused)) JNIEnv *env,
         return (jlong) mojoexec_acq_egl_handle();
     }
 
+    const char* target_filename = filename;
+    char redirect_buf[PATH_MAX];
+    Dl_info info;
+    if(dladdr((void*)ndlopen_bugfix, &info) && info.dli_fname != NULL) {
+        char dir[PATH_MAX];
+        strncpy(dir, info.dli_fname, sizeof(dir) - 1);
+        dir[sizeof(dir) - 1] = 0;
+        char* slash = strrchr(dir, '/');
+        if(slash != NULL) {
+            *slash = 0;
+            const char* base = strrchr(filename, '/');
+            base = (base != NULL) ? base + 1 : filename;
+            snprintf(redirect_buf, sizeof(redirect_buf), "%s/%s", dir, base);
+            if(access(redirect_buf, R_OK) == 0) {
+                if(strcmp(filename, redirect_buf) != 0) {
+                    LOGI("ndlopen redirect: %s -> %s", filename, redirect_buf);
+                    target_filename = redirect_buf;
+                }
+            }
+        }
+    }
+
     int mode = (int)jmode;
-    void* handle = dlopen(filename, mode);
+    void* handle = dlopen(target_filename, mode);
     if(handle == NULL && strstr(filename, "libglfw.so") != NULL) {
         printf("LWJGL linkerhook: fallback loading native libglfw.so\n");
         handle = dlopen("libglfw.so", mode);

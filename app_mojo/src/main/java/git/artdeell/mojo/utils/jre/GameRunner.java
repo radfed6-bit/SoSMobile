@@ -136,6 +136,16 @@ public class GameRunner {
         }
 
         File lwjglExtractDir = new File(Tools.DIR_CACHE, "lwjgl_native/" + versionId);
+        if (lwjglExtractDir.exists()) {
+            File[] oldFiles = lwjglExtractDir.listFiles();
+            if (oldFiles != null) {
+                for (File f : oldFiles) {
+                    try {
+                        f.delete();
+                    } catch (Exception ignored) {}
+                }
+            }
+        }
         FileUtils.ensureDirectory(lwjglExtractDir);
 
         File nativeDir = new File(Tools.NATIVE_LIB_DIR);
@@ -144,22 +154,21 @@ public class GameRunner {
             if (nativeLibs != null) {
                 for (File lib : nativeLibs) {
                     File target = new File(lwjglExtractDir, lib.getName());
-                    if (!target.exists() || target.length() != lib.length()) {
-                        try {
-                            FileUtils.copyFile(lib, target);
-                        } catch (Exception ignored) {}
-                    }
+                    try {
+                        FileUtils.copyFile(lib, target);
+                    } catch (Exception ignored) {}
                 }
             }
         }
 
         javaArgList.add("-Dorg.lwjgl.system.SharedLibraryExtractPath=" + lwjglExtractDir.getAbsolutePath());
-        javaArgList.add("-Dorg.lwjgl.glfw.libname=" + Tools.NATIVE_LIB_DIR + "/libglfw.so");
+        javaArgList.add("-Dorg.lwjgl.glfw.libname=libglfw.so");
         javaArgList.add("-Dorg.lwjgl.stb.libname=" + Tools.NATIVE_LIB_DIR + "/liblwjgl_stb.so");
         javaArgList.add("-Dorg.lwjgl.tinyfd.libname=" + Tools.NATIVE_LIB_DIR + "/liblwjgl_tinyfd.so");
         javaArgList.add("-Dorg.lwjgl.nuklear.libname=" + Tools.NATIVE_LIB_DIR + "/liblwjgl_nuklear.so");
         javaArgList.add("-Dorg.lwjgl.freetype.libname=" + Tools.NATIVE_LIB_DIR + "/libfreetype.so");
         javaArgList.add("-Djava.awt.headless=true");
+        javaArgList.add("-Dorg.lwjgl.util.NoHashChecks=true");
 
         gameRenderer.setupEnvironment(activity);
         JREUtils.chdir(syxConfig.getWorkingDir());
