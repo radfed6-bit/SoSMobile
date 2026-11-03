@@ -1,0 +1,239 @@
+diff --git a/src/android_window.c b/src/android_window.c
+index 74746323..5bf7264f 100644
+--- a/src/android_window.c
++++ b/src/android_window.c
+@@ -76,6 +76,7 @@ static pthread_mutex_t nw_egl_mutex;
+ static pthread_cond_t nw_egl_cond;
+ static pthread_mutex_t nw_vulkan_mutex;
+ static pthread_cond_t nw_vulkan_cond;
++static _Atomic GLFWbool window_mutexes_active = false;
+ 
+ static struct {
+     JavaVM *vm;
+@@ -365,6 +366,7 @@ GLFWbool android_init_window(void) {
+     if(pthread_mutex_init(&nw_vulkan_mutex, NULL) != 0) goto fail2;
+     if(pthread_cond_init(&nw_vulkan_cond, NULL) != 0) goto fail3;
+     if(!_input_queue_init(&input_queue)) goto fail4;
++    window_mutexes_active = true;
+     return GLFW_TRUE;
+ 
+     fail4:
+@@ -379,6 +381,18 @@ GLFWbool android_init_window(void) {
+ }
+ 
+ void android_destroy_window(void) {
++    if (!window_mutexes_active) return;
++    window_mutexes_active = false;
++    surfaceInUse = false;
++
++    pthread_mutex_lock(&nw_egl_mutex);
++    pthread_cond_broadcast(&nw_egl_cond);
++    pthread_mutex_unlock(&nw_egl_mutex);
++
++    pthread_mutex_lock(&nw_vulkan_mutex);
++    pthread_cond_broadcast(&nw_vulkan_cond);
++    pthread_mutex_unlock(&nw_vulkan_mutex);
++
+     pthread_mutex_destroy(&nw_egl_mutex);
+     pthread_cond_destroy(&nw_egl_cond);
+     pthread_mutex_destroy(&nw_vulkan_mutex);
+@@ -1032,9 +1046,11 @@ EGLSurface _glfwManageEglSurfaceAndroid(_GLFWwindow* window) {
+         }
+ 
+         if (currentMode == GLFW_ANDROID_WINDOW_MODE_SURFACE) {
+-            pthread_mutex_lock(&nw_egl_mutex);
+-            pthread_cond_broadcast(&nw_egl_cond);
+-            pthread_mutex_unlock(&nw_egl_mutex);
++            if (window_mutexes_active) {
++                pthread_mutex_lock(&nw_egl_mutex);
++                pthread_cond_broadcast(&nw_egl_cond);
++                pthread_mutex_unlock(&nw_egl_mutex);
++            }
+             surfaceInUse = false;
+         }
+     } else {
+@@ -1357,7 +1373,7 @@ VkResult _glfwCreateWindowSurfaceAndroid(VkInstance instance,
+     ownedByVulkan = true;
+ 
+     // Wait for a new window to become available
+-    if(nativeWindow == NULL) {
++    if(nativeWindow == NULL && window_mutexes_active) {
+         pthread_mutex_lock(&nw_vulkan_mutex);
+         pthread_cond_wait(&nw_vulkan_cond, &nw_vulkan_mutex);
+         pthread_mutex_unlock(&nw_vulkan_mutex);
+@@ -1396,7 +1412,7 @@ Java_git_artdeell_dnbootstrap_glfw_GLFW_nativeSurfaceCreated(JNIEnv *env, jclass
+     LOGI("Acquired native window: %p", window);
+     nativeWindow = window;
+     surfaceDestroyed = false;
+-    if(ownedByVulkan) {
++    if(window_mutexes_active && ownedByVulkan) {
+         pthread_mutex_lock(&nw_vulkan_mutex);
+         pthread_cond_broadcast(&nw_vulkan_cond);
+         pthread_mutex_unlock(&nw_vulkan_mutex);
+@@ -1412,16 +1428,20 @@ JNIEXPORT void JNICALL
+ Java_git_artdeell_dnbootstrap_glfw_GLFW_nativeSurfaceDestroyed(JNIEnv *env,
+                                                                            jclass clazz) {
+     surfaceDestroyed = true;
+-    if(!ownedByVulkan && surfaceInUse) {
++    if(window_mutexes_active && !ownedByVulkan && surfaceInUse) {
+         pthread_mutex_lock(&nw_egl_mutex);
+         pthread_cond_wait(&nw_egl_cond, &nw_egl_mutex);
+         LOGI("Unhalted after window destruction");
+-        ANativeWindow_release(nativeWindow);
+-        nativeWindow = NULL;
++        if (nativeWindow) {
++            ANativeWindow_release(nativeWindow);
++            nativeWindow = NULL;
++        }
+         pthread_mutex_unlock(&nw_egl_mutex);
+     }else {
+-        ANativeWindow_release(nativeWindow);
+-        nativeWindow = NULL;
++        if (nativeWindow) {
++            ANativeWindow_release(nativeWindow);
++            nativeWindow = NULL;
++        }
+     }
+ 
+ }
+diff --git a/src/init.c b/src/init.c
+index 892380e7..24967a5b 100644
+--- a/src/init.c
++++ b/src/init.c
+@@ -380,22 +380,28 @@ void _glfwInputError(int code, const char* format, ...)
+             strcpy(description, "ERROR: UNKNOWN GLFW ERROR");
+     }
+ 
+-    if (_glfw.initialized)
++    if (_glfw.initialized && _glfwPlatformIsMutexAllocated(&_glfw.errorLock))
+     {
+         error = _glfwPlatformGetTls(&_glfw.errorSlot);
+         if (!error)
+         {
+             error = _glfw_calloc(1, sizeof(_GLFWerror));
+-            _glfwPlatformSetTls(&_glfw.errorSlot, error);
+-            _glfwPlatformLockMutex(&_glfw.errorLock);
+-            error->next = _glfw.errorListHead;
+-            _glfw.errorListHead = error;
+-            _glfwPlatformUnlockMutex(&_glfw.errorLock);
++            if (error)
++            {
++                _glfwPlatformSetTls(&_glfw.errorSlot, error);
++                _glfwPlatformLockMutex(&_glfw.errorLock);
++                error->next = _glfw.errorListHead;
++                _glfw.errorListHead = error;
++                _glfwPlatformUnlockMutex(&_glfw.errorLock);
++            }
+         }
+     }
+     else
+         error = &_glfwMainThreadError;
+ 
++    if (!error)
++        error = &_glfwMainThreadError;
++
+     error->code = code;
+     strcpy(error->description, description);
+ 
+diff --git a/src/internal.h b/src/internal.h
+index ffede8e5..c66711cb 100644
+--- a/src/internal.h
++++ b/src/internal.h
+@@ -959,6 +959,14 @@ void _glfwPlatformDestroyMutex(_GLFWmutex* mutex);
+ void _glfwPlatformLockMutex(_GLFWmutex* mutex);
+ void _glfwPlatformUnlockMutex(_GLFWmutex* mutex);
+ 
++#if defined(GLFW_BUILD_POSIX_THREAD)
++#define _glfwPlatformIsMutexAllocated(m) ((m) != NULL && (m)->posix.allocated)
++#elif defined(GLFW_BUILD_WIN32_THREAD)
++#define _glfwPlatformIsMutexAllocated(m) ((m) != NULL && (m)->win32.allocated)
++#else
++#define _glfwPlatformIsMutexAllocated(m) ((m) != NULL)
++#endif
++
+ void* _glfwPlatformLoadModule(const char* path);
+ void _glfwPlatformFreeModule(void* module);
+ GLFWproc _glfwPlatformGetModuleSymbol(void* module, const char* name);
+diff --git a/src/posix_thread.c b/src/posix_thread.c
+index bab74d4f..25014217 100644
+--- a/src/posix_thread.c
++++ b/src/posix_thread.c
+@@ -39,6 +39,8 @@
+ 
+ GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
+ {
++    if (!tls)
++        return GLFW_FALSE;
+     assert(tls->posix.allocated == GLFW_FALSE);
+ 
+     if (pthread_key_create(&tls->posix.key, NULL) != 0)
+@@ -54,26 +56,36 @@ GLFWbool _glfwPlatformCreateTls(_GLFWtls* tls)
+ 
+ void _glfwPlatformDestroyTls(_GLFWtls* tls)
+ {
++    if (!tls)
++        return;
+     if (tls->posix.allocated)
++    {
++        tls->posix.allocated = GLFW_FALSE;
+         pthread_key_delete(tls->posix.key);
++    }
+     memset(tls, 0, sizeof(_GLFWtls));
+ }
+ 
+ void* _glfwPlatformGetTls(_GLFWtls* tls)
+ {
+-    assert(tls->posix.allocated == GLFW_TRUE);
++    if (!tls || !tls->posix.allocated)
++        return NULL;
+     return pthread_getspecific(tls->posix.key);
+ }
+ 
+ void _glfwPlatformSetTls(_GLFWtls* tls, void* value)
+ {
+-    assert(tls->posix.allocated == GLFW_TRUE);
++    if (!tls || !tls->posix.allocated)
++        return;
+     pthread_setspecific(tls->posix.key, value);
+ }
+ 
+ GLFWbool _glfwPlatformCreateMutex(_GLFWmutex* mutex)
+ {
+-    assert(mutex->posix.allocated == GLFW_FALSE);
++    if (!mutex)
++        return GLFW_FALSE;
++    if (mutex->posix.allocated)
++        return GLFW_TRUE;
+ 
+     if (pthread_mutex_init(&mutex->posix.handle, NULL) != 0)
+     {
+@@ -86,20 +98,27 @@ GLFWbool _glfwPlatformCreateMutex(_GLFWmutex* mutex)
+ 
+ void _glfwPlatformDestroyMutex(_GLFWmutex* mutex)
+ {
++    if (!mutex)
++        return;
+     if (mutex->posix.allocated)
++    {
++        mutex->posix.allocated = GLFW_FALSE;
+         pthread_mutex_destroy(&mutex->posix.handle);
++    }
+     memset(mutex, 0, sizeof(_GLFWmutex));
+ }
+ 
+ void _glfwPlatformLockMutex(_GLFWmutex* mutex)
+ {
+-    assert(mutex->posix.allocated == GLFW_TRUE);
++    if (!mutex || !mutex->posix.allocated)
++        return;
+     pthread_mutex_lock(&mutex->posix.handle);
+ }
+ 
+ void _glfwPlatformUnlockMutex(_GLFWmutex* mutex)
+ {
+-    assert(mutex->posix.allocated == GLFW_TRUE);
++    if (!mutex || !mutex->posix.allocated)
++        return;
+     pthread_mutex_unlock(&mutex->posix.handle);
+ }
+ 

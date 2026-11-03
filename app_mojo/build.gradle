@@ -320,3 +320,18 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 }
+
+tasks.register('applyGlfwPatches') {
+    doLast {
+        def patchFile = file("${rootDir}/patches/glfw-bionic-fortify.patch")
+        if (patchFile.exists() && file("${rootDir}/glfw").exists()) {
+            exec {
+                workingDir = file("${rootDir}/glfw")
+                commandLine 'git', 'apply', '--ignore-whitespace', patchFile.absolutePath
+                ignoreExitValue = true
+            }
+        }
+    }
+}
+preBuild.dependsOn 'applyGlfwPatches'
+

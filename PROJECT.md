@@ -23,16 +23,19 @@ SoSMobile is an Android launcher tailored for the game Songs of Syx, built upon 
 | F11 | Build System & Assembly | Init submodules, configure SDK/NDK in `local.properties`, align compileOptions, verify `./gradlew assembleDebug` | M4 | Acceptance, survey_3 |
 | F12 | E2E Test Suite | Comprehensive opaque-box test suite (Tiers 1-4) verifying all requirements and publishing `TEST_READY.md` | M5 | Project Pattern |
 | F13 | GitHub Release & Repository Push | Commit and push code to GitHub repository, create GitHub Release with assembled APK via `gh` CLI | M4 | User Follow-up 2 |
+| F14 | LWJGL/GLFW Launch Args & Native Compatibility | JVM args `-Dorg.lwjgl.glfw.libname=libglfw.so`, library path, headless mode, LWJGL 3.3.x native symbol bridge | M6 | User Follow-up 4 |
+| F15 | Authoritative Legal Notices Correction | Update Legal Notices in `README.md` and `README_RU.md` with Jake Versluis / Gamatron AB | M6 | User Follow-up 5 |
+| F16 | Android 15 Bionic FORTIFY Mutex Protections | Fix `pthread_mutex_lock` on destroyed/uninitialized mutexes in GLFW and AWT (`posix_thread.c`, `init.c`, `android_window.c`, `awt.c`) | M6 | User Follow-up 6 |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
 | M1 | Runtime & Crash Remediation | F1, F2, F3, F4 | none | DONE |
-| M2 | First-Launch Device Auto-Config | F5, F6 | none | IN_PROGRESS |
+| M2 | First-Launch Device Auto-Config | F5, F6 | none | DONE |
 | M3 | Rebranding & Documentation | F7, F8, F10 | none | DONE |
-| M4 | Code Health, Build Assembly & Release | F9, F11, F13 | M1, M2, M3 | PLANNED |
+| M4 | Code Health, Build Assembly & Release | F9, F11, F13 | M1, M2, M3 | DONE |
 | M5 | E2E Testing Track | F12 | none (Parallel) | DONE |
-| M6 | Final Verification & Audit | Tiers 1-4 pass + Tier 5 hardening + Forensic Audit | M4, M5 | PLANNED |
+| M6 | Final Verification & Release v0.1.1 | Tiers 1-4 pass + Tier 5 hardening + F14 + F15 + F16 + Forensic Audit | M4, M5 | DONE |
 
 ## Interface Contracts
 ### `DeviceAutoConfig` ↔ `LauncherPreferences`

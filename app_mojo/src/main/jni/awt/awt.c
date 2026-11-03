@@ -14,8 +14,8 @@ float inputYRatio = 0;
 JavaVM* androidVM;
 JavaVM* runtimeVM;
 
-pthread_mutex_t vm_wait_mutex;
-pthread_cond_t vm_wait_cond;
+pthread_mutex_t vm_wait_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t vm_wait_cond = PTHREAD_COND_INITIALIZER;
 
 _Atomic bool isVmConnected = false;
 
@@ -35,8 +35,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
         register_methods_clipboard(env);
     } else if (runtimeVM != vm) {
         runtimeVM = vm;
+        pthread_mutex_lock(&vm_wait_mutex);
         isVmConnected = true;
         pthread_cond_broadcast(&vm_wait_cond);
+        pthread_mutex_unlock(&vm_wait_mutex);
     }
 
     return JNI_VERSION_1_4;
