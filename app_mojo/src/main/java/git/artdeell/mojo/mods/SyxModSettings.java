@@ -120,17 +120,17 @@ public final class SyxModSettings {
         }
 
         try {
-            JSONArray arr = new JSONArray();
+            StringBuilder sb = new StringBuilder();
+            sb.append("MODS: [\n");
             if (activeMods != null) {
                 for (String mod : activeMods) {
                     if (mod != null && !mod.trim().isEmpty()) {
-                        arr.put(mod.trim());
+                        sb.append("\t\"").append(mod.trim()).append("\",\n");
                     }
                 }
             }
-            root.put(KEY_MODS, arr);
-
-            String formattedJson = root.toString(2) + "\n";
+            sb.append("],\n");
+            String formattedJson = sb.toString();
             File tempFile = new File(settingsFile.getAbsolutePath() + ".tmp");
             try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8)) {
                 writer.write(formattedJson);
