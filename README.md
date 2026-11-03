@@ -126,7 +126,7 @@ Open the **Mod Manager** from the launcher menu. You can view all installed mods
 ## Legal Notices & Credits
 
 ### Disclaimer
-- **Songs of Syx** is developed and copyrighted by **Jake Versluis / Strange Scaffold / Gamatron AB**. All rights reserved.
+- **Songs of Syx** is developed and copyrighted by **Jake Versluis / Gamatron AB**. All rights reserved.
 - **SoSMobile** is an independent, non-commercial open-source launcher developed by the community. It is **NOT** affiliated with, endorsed by, or sponsored by Jake Versluis or Gamatron AB.
 - SoSMobile **DOES NOT** contain, distribute, or pirate any copyrighted game assets, data, sounds, graphics, or compiled binaries of Songs of Syx. Users must independently own a licensed copy of the game.
 

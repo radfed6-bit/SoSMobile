@@ -138,7 +138,9 @@ public class GameRunner {
         File lwjglExtractDir = new File(Tools.DIR_CACHE, "lwjgl_native/" + versionId);
         FileUtils.ensureDirectory(lwjglExtractDir);
         javaArgList.add("-Dorg.lwjgl.system.SharedLibraryExtractPath=" + lwjglExtractDir.getAbsolutePath());
+        javaArgList.add("-Dorg.lwjgl.glfw.libname=libglfw.so");
         javaArgList.add("-Dorg.lwjgl.freetype.libname=" + Tools.NATIVE_LIB_DIR + "/libfreetype.so");
+        javaArgList.add("-Djava.awt.headless=true");
 
         gameRenderer.setupEnvironment(activity);
         JREUtils.chdir(syxConfig.getWorkingDir());
