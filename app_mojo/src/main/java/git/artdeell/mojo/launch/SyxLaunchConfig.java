@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import git.artdeell.mojo.mods.SyxModSettings;
 
 /**
  * Authoritative Launch Environment Configuration & Classpath Assembly for Songs of Syx on ARM64 Android.
@@ -123,6 +124,12 @@ public class SyxLaunchConfig implements Serializable {
             cacheDir = "/data/data/git.artdeell.mojo/cache";
         }
 
+        // Ensure default settings file exists in resolvedHomeDir to prevent DataError at startup
+        File settingsFile = SyxModSettings.getSettingsFile(new File(resolvedHomeDir));
+        if (!settingsFile.exists() || settingsFile.length() == 0) {
+            SyxModSettings.saveActiveMods(new File(resolvedHomeDir), Collections.emptyList());
+        }
+
         // If activeMods was not explicitly supplied, try reading from LauncherSettings.txt
         if (activeMods == null) {
             activeMods = loadActiveMods(resolvedHomeDir);
@@ -141,6 +148,7 @@ public class SyxLaunchConfig implements Serializable {
         sysProps.put("org.lwjgl.system.SharedLibraryExtractPath", cacheDir + "/lwjgl_native");
         sysProps.put("org.lwjgl.system.allocator", "system");
         sysProps.put("org.lwjgl.opengl.libname", "libGLMojo.so");
+        sysProps.put("org.lwjgl.librarypath", appNativeDir);
         sysProps.put("java.library.path", appNativeDir);
         sysProps.put("jna.boot.library.path", appNativeDir);
         sysProps.put("java.awt.headless", "false");
@@ -161,6 +169,7 @@ public class SyxLaunchConfig implements Serializable {
         javaArgs.add("-Duser.dir=" + resolvedGameDir);
         javaArgs.add("-Duser.home=" + resolvedHomeDir);
         javaArgs.add("-Djava.library.path=" + appNativeDir);
+        javaArgs.add("-Dorg.lwjgl.librarypath=" + appNativeDir);
         javaArgs.add("-Dorg.lwjgl.opengl.libname=libGLMojo.so");
         javaArgs.add("-cp");
         javaArgs.add(String.join(File.pathSeparator, classpath));

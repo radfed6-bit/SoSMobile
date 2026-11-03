@@ -5,15 +5,18 @@ import static git.artdeell.mojo.Tools.getTotalDeviceMemory;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 
 import git.artdeell.mojo.R;
 import git.artdeell.mojo.Tools;
 import git.artdeell.mojo.contracts.OpenDocumentWithExtension;
 import git.artdeell.mojo.multirt.MultiRTConfigDialog;
 import git.artdeell.mojo.prefs.CustomSeekBarPreference;
+import git.artdeell.mojo.prefs.DeviceAutoConfig;
 import git.artdeell.mojo.prefs.LauncherPreferences;
 
 public class LauncherPreferenceJavaFragment extends LauncherPreferenceFragment {
@@ -49,6 +52,22 @@ public class LauncherPreferenceJavaFragment extends LauncherPreferenceFragment {
 
         requirePreference("install_jre").setOnPreferenceClickListener(preference->{
             openMultiRTDialog();
+            return true;
+        });
+
+        Preference resetPref = findPreference("reset_recommended_settings");
+        if (resetPref == null) {
+            resetPref = new Preference(requireContext());
+            resetPref.setKey("reset_recommended_settings");
+            resetPref.setTitle("Reset to Recommended Settings");
+            resetPref.setSummary("Re-detect device hardware and restore recommended RAM and graphics configuration");
+            resetPref.setIcon(R.drawable.ic_px_sliders);
+            getPreferenceScreen().addPreference(resetPref);
+        }
+        resetPref.setOnPreferenceClickListener(preference -> {
+            DeviceAutoConfig.resetToRecommended(requireContext());
+            memorySeekbar.setValue(LauncherPreferences.PREF_RAM_ALLOCATION);
+            Toast.makeText(requireContext(), "Recommended settings restored", Toast.LENGTH_SHORT).show();
             return true;
         });
     }

@@ -3,6 +3,7 @@ package git.artdeell.mojo.mods;
 import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class ModManagerFragment extends Fragment {
             String savedGameDir = LauncherPreferences.getGameDirectory();
             File gameDir = (savedGameDir != null && !savedGameDir.trim().isEmpty())
                     ? new File(savedGameDir)
-                    : new File("/SoSMobile");
+                    : new File(Environment.getExternalStorageDirectory(), "SoSMobile");
 
             List<ModInfo> discovered = SyxModManager.discoverMods(gameDir, userHome);
             List<String> activeMods = SyxModManager.loadActiveMods(userHome);

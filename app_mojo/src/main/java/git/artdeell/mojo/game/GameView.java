@@ -141,12 +141,20 @@ public class GameView extends FrameLayout implements PlatformGrabListener, Surfa
             // If the view was force panned (KeyboardPan keycode) apply an animation instead of immediate override
             // This fixes weird jumps when the user moves the cursor first time after pressing that keycode
             if(GameActivity.mForcedPanningHeight != 0) {
-                mSurface.animate().setDuration(100).translationY(-translationY).start();
-                mCursorView.animate().setDuration(100).translationY(-translationY).start();
+                if (mSurface != null) {
+                    mSurface.animate().setDuration(250).translationY(-translationY).start();
+                }
+                if (mCursorView != null) {
+                    mCursorView.animate().setDuration(100).translationY(-translationY).start();
+                }
                 GameActivity.mForcedPanningHeight = 0;
             } else {
-                mSurface.setTranslationY(-translationY);
-                mCursorView.setTranslationY(-translationY);
+                if (mSurface != null) {
+                    mSurface.setTranslationY(-translationY);
+                }
+                if (mCursorView != null) {
+                    mCursorView.setTranslationY(-translationY);
+                }
             }
         }
         return ret;

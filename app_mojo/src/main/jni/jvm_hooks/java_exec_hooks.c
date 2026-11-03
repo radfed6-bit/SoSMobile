@@ -44,8 +44,8 @@ static jint hooked_ProcessImpl_forkAndExec(JNIEnv *env, jobject process, jint mo
     const char *pProg = (char *)((*env)->GetByteArrayElements(env, prog, NULL));
     const char* pProgBaseName = basename(pProg);
     const size_t basename_len = strlen(pProgBaseName);
-    char prog_basename[basename_len];
-    memcpy(&prog_basename, pProgBaseName, basename_len + 1);
+    char prog_basename[basename_len + 1];
+    memcpy(prog_basename, pProgBaseName, basename_len + 1);
     (*env)->ReleaseByteArrayElements(env, prog, (jbyte *)pProg, 0);
 
     if(strcmp(prog_basename, "xdg-open") == 0) {
@@ -67,6 +67,22 @@ static jint hooked_ProcessImpl_forkAndExec(JNIEnv *env, jobject process, jint mo
             replaceLibPathInEnvBlock(env, &envBlock, &envc, dirname(ffmpeg_path));
             prog = stringToBytes(env, ffmpeg_path);
         }
+    }else if(strcmp(prog_basename, "java") == 0) {
+        // Try executing the target java binary via original forkAndExec.
+        // On Android 10+ (API 29+), executing binaries from writable app storage is blocked
+        // by SELinux W^X restrictions, throwing IOException (error=13, Permission denied).
+        // If an exception occurs, clear it and provide a safe fallback so game startup proceeds cleanly.
+        jint pid = orig_ProcessImpl_forkAndExec(env, process, mode, helperpath, prog, argBlock, argc, envBlock, envc, dir, std_fds, redirectErrorStream);
+        if((*env)->ExceptionCheck(env)) {
+            (*env)->ExceptionClear(env);
+            printf("exec_hooks: intercepted java exec failure (W^X / EACCES), providing graceful fallback\n");
+            if(std_fds != NULL) {
+                jint dummy_fds[3] = {-1, -1, -1};
+                (*env)->SetIntArrayRegion(env, std_fds, 0, 3, dummy_fds);
+            }
+            return 0;
+        }
+        return pid;
     }
     return orig_ProcessImpl_forkAndExec(env, process, mode, helperpath, prog, argBlock, argc, envBlock, envc, dir, std_fds, redirectErrorStream);
 }

@@ -47,8 +47,6 @@ public class MainMenuFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button mNewsButton = view.findViewById(R.id.news_button);
-        Button mDiscordButton = view.findViewById(R.id.social_media_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_files_button);
@@ -66,8 +64,6 @@ public class MainMenuFragment extends Fragment {
             );
         }
 
-        mNewsButton.setOnClickListener(v -> Tools.openURL(requireActivity(), Tools.URL_HOME));
-        mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.social_media_invite)));
         if (mCustomControlButton != null) {
             mCustomControlButton.setVisibility(View.GONE);
         }
@@ -96,11 +92,6 @@ public class MainMenuFragment extends Fragment {
                     Tools.swapFragment(requireActivity(), ModManagerFragment.class, ModManagerFragment.TAG, null)
             );
         }
-
-        mNewsButton.setOnLongClickListener((v) -> {
-            Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
-            return true;
-        });
 
         updateGameFolderCard();
     }

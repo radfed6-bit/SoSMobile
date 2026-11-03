@@ -145,8 +145,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     bundle {
@@ -287,7 +287,7 @@ afterEvaluate {
         registrar.setVariant(variant)
 
 		if (variant.getName().toLowerCase().contains("full")) {
-            registrar.jreRuntimeDependency 8, "components/jre"
+            registrar.jreRuntimeDependency 17, "components/jre"
         }
         
 		def cacioJarUrl = "https://jitpack.io/com/github/MojoLauncher/%1\$s/%2\$s/%3\$s/%2\$s-%3\$s%4\$s.jar"

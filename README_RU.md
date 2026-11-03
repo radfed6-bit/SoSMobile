@@ -1,92 +1,145 @@
-<H1 align="center">MojoLauncher (также известный как MJLauncher)</H1>
+# SoSMobile
 
-<a href="./README.md">Readme in English</a>
+**Android-лаунчер для Songs of Syx**
 
-<img src="./app_mojo/src/main/assets/mojo.png" align="left" width="150" height="150" alt="MojoLauncher logo">
+[![Платформа: ARM64](https://img.shields.io/badge/Platform-ARM64%20%2F%20aarch64-blue.svg)](https://github.com/radfed6-bit/SoSMobile)
+[![Android API](https://img.shields.io/badge/Android-API%2021%2B%20(%D1%80%D0%B5%D0%BA%D0%BE%D0%BC%D0%B5%D0%BD%D0%B4%D1%83%D0%B5%D1%82%D1%81%D1%8F%2026%2B)-green.svg)](https://developer.android.com)
+[![JDK: OpenJDK 17](https://img.shields.io/badge/JDK-OpenJDK%2017-orange.svg)](https://adoptium.net)
+[![Лицензия: LGPL v3](https://img.shields.io/badge/License-LGPLv3-brightgreen.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-[![Android CI](https://github.com/MojoLauncher/MojoLauncher/workflows/Android%20CI/badge.svg)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/MojoLauncher/MojoLauncher)](https://github.com/MojoLauncher/MojoLauncher/actions)
-[![Discord](https://img.shields.io/discord/1365346109131722753.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/VHdwQFsaGX)
-[![Telegram](https://img.shields.io/badge/Telegram-MojoLauncher%20%D0%A1%D0%9D%D0%93-26A5E4?logo=telegram&logoColor=white)](https://t.me/mojolauncher_chat)
+---
 
-* MojoLauncher это лаунчер, основанный на [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher), позволяющий играть в Minecraft: Java Edition на устройствах Android!
+## Обзор проекта
 
-* Он может запускать почти любую версию Minecraft, позволяя устанваливать через .jar загрузчики модов такие как [Forge](https://files.minecraftforge.net/) и [Fabric](http://fabricmc.net/), и моды по типу [OptiFine](https://optifine.net).
+**SoSMobile** — это открытый Android-лаунчер, предназначенный для нативного запуска масштабного градостроительного симулятора и стратегии **Songs of Syx** на современных мобильных устройствах с архитектурой ARM64.
 
-## Навигация
-- [Введение](#introduction)
-- [Как получить MojoLauncher](#getting-mojolauncher)
-- [Сборка](#building) 
-- [Текущие планы](#current-roadmap) 
-- [Лицензия](#license) 
-- [Внести свой вклад в проект](#contributing) 
-- [Благодарности & Сторонние компоненты и их лицензии](#credits--third-party-components-and-their-licenses-if-available)
+Лаунчер предоставляет готовую среду исполнения десктопной Java и слой трансляции графики и ввода непосредственно на Android без необходимости модификации, перепаковки или распространения оригинальных бинарных файлов игры.
 
-## Введение 
-* MojoLauncher это лаунчер Minecraft: Java Edition для Android основанный на [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
-* Лаунчер может запускать почти все доступные версии Minecraft в диапазоне от rd-132211 до снапшотов 26.x (включая версии Combat Test). 
-* Моддинг через Forge и Fabric так же поддерживается. 
+---
 
-## Как получить MojoLauncher
+## Основные возможности
 
-Получить копию MojoLauncher можно четырьмя способами:
+- **Встроенная среда Java 17 по умолчанию**: Использует оптимизированную среду OpenJDK 17 ARM64 «из коробки» — игра запускается сразу без необходимости вручную скачивать или настраивать JVM.
+- **Автонастройка при первом запуске**: При первом старте система автоматически определяет параметры устройства (объем оперативной памяти, разрешение экрана и GPU) и задает оптимальный объем выделяемой памяти, масштабирование экрана и параметры рендеринга.
+- **Адаптированное сенсорное управление**: Специально настроенная система распознавания жестов для комфортной игры в симулятор строительства и управления:
+  - **Одиночное касание (тап)**: Выбор жителей, выбор инструментов, размещение построек (левая кнопка мыши)
+  - **Перетаскивание одним пальцем**: Выделение области рамкой и разметка зон
+  - **Касание двумя пальцами / долгое нажатие**: Отмена действия или вызов контекстного меню (правая кнопка мыши)
+  - **Перетаскивание двумя пальцами**: Плавное перемещение камеры по карте поселения (средняя кнопка мыши)
+  - **Щипок (Pinch)**: Плавное масштабирование камеры (колесико мыши)
+- **Плавающая панель управления (HUD)**: Быстрый доступ к ключевым игровым командам прямо на экране:
+  - Пауза / Возобновление (`Пробел`)
+  - Переключение скорости симуляции (1x, 2x, 3x, 4x)
+  - Поворот постройки (`R`)
+  - Меню / Отмена (`Esc`)
+  - Вызов виртуальной экранной клавиатуры для ввода названий городов и поиска
+- **Встроенный менеджер модов**: Просмотр установленных модов, включение/выключение в один тап, безопасная установка модов из ZIP-архивов и автоматическое подключение в classpath.
+- **Аппаратное ускорение графики и звука**: Трансляция вызовов LWJGL / OpenGL через GL4ES и низколатентный звук через OpenAL Soft с бэкендом Google Oboe.
 
-1. Можно скачать готовый билд с раздела [релизов](http://github.com/mojolauncher/mojolauncher/releases).
+---
 
-2. Можно скачать с Google Play нажав на кнопку ниже:
-[![Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=git.artdeell.mjlaunch)
+## Системные требования
 
-3. Можно скачать с ранние билды с [Github Actions](http://github.com/mojolauncher/mojolauncher/actions).
+### Устройство Android
+- **Процессор**: 64-битный ARM (`ARM64` / `aarch64`). 32-битные процессоры не поддерживаются.
+- **Операционная система**: Android 8.0 (API 26) или новее (минимальная версия: Android 5.0 / API 21).
+- **Оперативная память (RAM)**: Минимум 3 ГБ (выделение под JVM от 2048 МБ); рекомендуется 4–8+ ГБ для крупных поселений.
+- **Накопитель**: Не менее 2 ГБ свободного места во встроенной памяти.
 
-4. Можно [собрать](#building) с исходного кода.
-## Сборка  
-* Скомпилируйте лаунчер (все необходимые компоненты скачаются автоматически)
-```
-./gradlew :app_mojo:assembleDebug
-```
-При сборке на Windows:
-* Замените `./gradlew` на `.\gradlew.bat`
-* Убедитесь, что у вас стоит symlink `mojoexec`, `sdl`, `glfw` в `app_mojo/src/main/jni/`
+### Файлы игры
+- Лицензионная копия **Songs of Syx** (приобретается в [Steam](https://store.steampowered.com/app/1162750/Songs_of_Syx/), [GOG](https://www.gog.com/game/songs_of_syx) или [itch.io](https://jh-games.itch.io/songs-of-syx)).
+- В каталоге игры обязательно должны присутствовать файл `SongsOfSyx.jar` и папка `base/` (с архивом `data.zip`).
 
-## Текущие планы
-- [x] Система инстансов на замену профилям версий
-- [x] Поддержка 1.21.5 "из коробки"
-- [x] Импорт mrpack/CurseForge zip
-- [x] LTW: добавить поддержку Compute расширений
-- [ ] LTW: исправить проблемы с Create
-- [ ] LTW: использовать форматы с поддержкой Color Attachment для объектов фреймбуфера (FBO)
-- [ ] Менеджер модов/модпаков
-- [ ] Импорт инстансов формата MultiMC
-- [ ] Поддержка Vintage Story
-- [ ] Реализовать общий стандарт библиотек
+---
 
-## Известные проблемы
-- Некоторые физические мышки могут иметь низкую скорость курсора
-- На Holy GL4ES большие алиасы текстур могут быть искажены (из-за чего в некоторых модпаках могут быть растянутые или излишне квадратные текстуры)
-- Скорее всего есть ещё, поэтому у нас есть баг-трекер ;) 
+## Руководство по установке и запуску
 
-## Лицензия
-- MojoLauncher лицензирован под [GNU LGPLv3](https://github.com/MojoLauncher/MojoLauncher/blob/v3_openjdk/LICENSE).
+### 1. Подготовка файлов игры
+1. На компьютере откройте каталог с установленной игрой Songs of Syx:
+   - **Steam**: `steamapps/common/Songs of Syx/`
+   - **GOG**: `GOG Games/Songs of Syx/`
+2. Подключите Android-устройство к ПК через USB (или передайте файлы по локальной сети).
+3. Скопируйте всю папку `Songs of Syx` в память мобильного устройства (например, в `/storage/emulated/0/SoSMobile/` или `/storage/emulated/0/SongsOfSyx/`).
 
-## Внести свой вклад в проект
-Мы привествуем желающих внести свой вклад в проект! Нам не помешает любая помощь, не только код. Например, вы можете помочь в разработке и формировании вики. Вы так же можете помочь [перевести проект](https://mojolauncher.ru/translate/translator.html) на ваш язык!
+### 2. Установка и настройка лаунчера
+1. Скачайте и установите APK-файл **SoSMobile** на устройство.
+2. Запустите SoSMobile. На Android 11 и новее предоставьте разрешение на **доступ ко всем файлам** (`MANAGE_EXTERNAL_STORAGE`), необходимое для чтения ресурсов игры и сохранения прогресса.
+3. На главном экране нажмите кнопку **Выбрать папку с игрой** и укажите каталог, куда были скопированы файлы игры.
+4. Нажмите **Выбрать текущую директорию**. Лаунчер проверит наличие `SongsOfSyx.jar` и `base/data.zip` и подтвердит корректность папки.
 
+### 3. Запуск игры
+1. При необходимости скорректируйте объем памяти или разрешение в настройках.
+2. Нажмите **Запустить игру**!
 
-Любые изменения в коде этого репозитория должны быть отправлены в виде pull request-а. Описание должно объяснять что делает код и предоставлять шаги для его запуска.
+---
 
-## Благодарности & Сторонние компоненты и их лицензии (если таковые имеются)
-- [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): [GNU LGPLv3 License](https://github.com/PojavLauncherTeam/PojavLauncher/blob/v3_openjdk/LICENSE)
-- Android Support Libraries: [Apache License 2.0](https://android.googlesource.com/platform/prebuilts/maven_repo/android/+/master/NOTICE.txt).
-- [GL4ES](https://github.com/PojavLauncherTeam/gl4es): [MIT License](https://github.com/ptitSeb/gl4es/blob/master/LICENSE).<br>
-- [OpenJDK](https://github.com/PojavLauncherTeam/openjdk-multiarch-jdk8u): [GNU GPLv2 License](https://openjdk.java.net/legal/gplv2+ce.html).<br>
-- [GLFW](https://github.com/MojoLauncher/glfw): [zlib license](https://github.com/MojoLauncher/glfw/blob/glfw34/LICENSE.md)
-- [LWJGL2-GLFW](https://github.com/MojoLauncher/lwjgl2-glfw): 3-Clause BSD license
-- [LWJGL3](https://github.com/LWJGL/lwjgl3): [BSD-3 License](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md).
-- [mojoexec](https://github.com/MojoLauncher/mojoexec): [MIT License](https://github.com/MojoLauncher/mojoexec/blob/master/LICENSE)
-- [Mesa 3D Graphics Library](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
-- [pro-grade](https://github.com/pro-grade/pro-grade) (Менеджер контейнеризации Java): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
-- [bhook](https://github.com/bytedance/bhook) (Используется для получения кода ошибки): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
-- [Authlib-Injector](https://github.com/yushijinhun/authlib-injector) (Используется для авторизации через ely.by): [AGPL-3.0](https://github.com/yushijinhun/authlib-injector/blob/develop/LICENSE).
-- [alsoft](https://github.com/kcat/openal-soft/) (Библиотека вывода звука): [GNU LIBRARY GENERAL PUBLIC LICENSE](https://github.com/kcat/openal-soft/blob/master/COPYING) и [modified PFFFT](https://github.com/kcat/openal-soft/blob/master/LICENSE-pffft).
-- [oboe](https://github.com/google/oboe): [Apache License 2.0](https://github.com/google/oboe/blob/main/LICENSE).
-- Отдельная благодарность к [Mineskin](https://mineskin.eu/) за предоставление аватаров Minecraft.
+## Сборка из исходного кода
+
+### Требования к окружению сборки
+- **JDK**: OpenJDK 17
+- **Android SDK**: Build Tools 34.0.0+, Android Platform 36
+- **Android NDK**: NDK версии `29.0.14206865`
+- **Git**: С поддержкой submodules
+
+### Инструкция по сборке
+1. Клонируйте репозиторий вместе со всеми субмодулями:
+   ```bash
+   git clone --recursive https://github.com/radfed6-bit/SoSMobile.git
+   cd SoSMobile
+   ```
+   *(Если репозиторий уже клонирован без субмодулей, выполните `git submodule update --init --recursive`)*
+
+2. Скомпилируйте APK с помощью Gradle Wrapper:
+   ```bash
+   # Linux / macOS
+   chmod +x gradlew
+   ./gradlew assembleDebug
+
+   # Windows
+   gradlew.bat assembleDebug
+   ```
+
+3. Готовый APK-файл будет находиться по пути:
+   ```
+   app_mojo/build/outputs/apk/debug/app_mojo-debug.apk
+   ```
+
+---
+
+## Часто задаваемые вопросы (FAQ)
+
+#### В: Лаунчер пишет «Неверная папка с игрой».
+Убедитесь, что выбрана корневая папка игры, содержащая файл `SongsOfSyx.jar` и подпапку `base/` (с `data.zip`). Не выбирайте саму подпапку `base/`.
+
+#### В: Игра аварийно завершается при запуске с ошибкой OutOfMemoryError.
+Откройте настройки лаунчера и увеличьте объем выделяемой памяти (RAM). Для Songs of Syx рекомендуется выделять не менее 2048–3072 МБ.
+
+#### В: Как вводить текст (например, название города или поисковый запрос)?
+Нажмите на иконку клавиатуры ⌨ на плавающей панели HUD у края экрана, чтобы открыть стандартную экранную клавиатуру Android.
+
+#### В: Как установить моды?
+Откройте раздел **Моды** в главном меню лаунчера. Вы можете включать и отключать установленные модификации либо установить новый мод из архива по кнопке **Установить мод (.zip)**.
+
+---
+
+## Лицензия и благодарности
+
+### Правовая оговорка
+- Игра **Songs of Syx** разработана и защищена авторским правом **Jake Versluis / Strange Scaffold / Gamatron AB**. Все права сохранены.
+- **SoSMobile** — независимый некоммерческий проект с открытым исходным кодом. Проект **НЕ** связан с Jake Versluis или Gamatron AB, не одобрен и не спонсируется ими.
+- SoSMobile **НЕ** содержит и не распространяет защищенные авторским правом ресурсы игры, графику, музыку или бинарные файлы. Пользователь должен самостоятельно владеть лицензионной копией игры.
+
+### Лицензия
+- Исходный код SoSMobile распространяется под лицензией **GNU Lesser General Public License v3.0 (LGPLv3)**.
+- Подробности см. в файле [LICENSE](LICENSE).
+
+### Сторонние компоненты
+- [MojoLauncher](https://github.com/MojoLauncher/MojoLauncher) и [PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher): LGPLv3 (базовая архитектура запуска JVM на Android)
+- [OpenJDK Multi-Arch](https://openjdk.org/): GNU GPLv2 with Classpath Exception
+- [LWJGL 3](https://www.lwjgl.org/): BSD-3 License
+- [GLFW](https://www.glfw.org/): zlib License
+- [SDL](https://www.libsdl.org/): zlib License
+- [OpenAL Soft](https://openal-soft.org/): LGPLv2+ License
+- [Google Oboe](https://github.com/google/oboe): Apache License 2.0
+- [Holy GL4ES](https://github.com/artdeell/gl4es_extra_extra): MIT License
+- [Mesa 3D](https://gitlab.freedesktop.org/mesa/mesa): MIT License

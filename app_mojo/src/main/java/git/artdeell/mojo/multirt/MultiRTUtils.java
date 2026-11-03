@@ -34,6 +34,9 @@ import java.util.Objects;
 
 public class MultiRTUtils {
 
+    public static final int DEFAULT_JAVA_VERSION = 17;
+    public static final String DEFAULT_JRE_PREFIX = "jre17";
+
     private static final HashMap<String,Runtime> sCache = new HashMap<>();
 
     private static final File RUNTIME_FOLDER = new File(Tools.MULTIRT_HOME);
@@ -102,6 +105,9 @@ public class MultiRTUtils {
 
         // Refresh libraries
         copyDummyNativeLib("libawt_xawt.so", libDir);
+
+        // Ensure binaries in bin/ and libraries in lib/ are executable
+        setExecutableRecursively(dest);
     }
 
     public static void installRuntimeNamedBinpack(InputStream universalFileInputStream, InputStream platformBinsInputStream, String name, String binpackVersion) throws IOException {
@@ -265,11 +271,34 @@ public class MultiRTUtils {
                     }
                 } else if (tarEntry.isDirectory()) {
                     git.artdeell.mojo.utils.FileUtils.ensureDirectory(destPath);
-                } else if (!destPath.exists() || destPath.length() != tarEntry.getSize()) {
-                    FileOutputStream os = new FileOutputStream(destPath);
-                    IOUtils.copyLarge(tarIn, os, buffer);
-                    os.close();
+                } else {
+                    if (!destPath.exists() || destPath.length() != tarEntry.getSize()) {
+                        FileOutputStream os = new FileOutputStream(destPath);
+                        IOUtils.copyLarge(tarIn, os, buffer);
+                        os.close();
+                    }
+                    int mode = tarEntry.getMode();
+                    if ((mode & 0111) != 0 || (destPath.getParentFile() != null && "bin".equals(destPath.getParentFile().getName()))) {
+                        destPath.setExecutable(true, false);
+                    }
                 }
+            }
+        }
+    }
+
+    private static void setExecutableRecursively(File file) {
+        if (file == null || !file.exists()) return;
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    setExecutableRecursively(child);
+                }
+            }
+        } else {
+            String name = file.getName();
+            if (name.endsWith(".so") || (file.getParentFile() != null && "bin".equals(file.getParentFile().getName()))) {
+                file.setExecutable(true, false);
             }
         }
     }

@@ -437,7 +437,7 @@
     <string name="mcl_button_social_media">Discord</string>
     <string name="ltw_render_distance_warning_msg">Your GPU is not capable of rendering above 7 render distance without Sodium or other similar mods. The render distance will be automatically reduced when you click "OK".</string>
     <string name="mcl_button_open_directory">Open game directory</string>
-    <string name="social_media_invite" translatable="false">https://discord.gg/VHdwQFsaGX</string>
+    <string name="social_media_invite" translatable="false"></string>
     <string name="local_login_bad_username_title">Unsuitable username</string>
     <string name="local_login_bad_username_text">The username must be between 3–16 characters long, and must only contain latin letters, numbers 0–9 and underscores.</string>
     <string name="quick_setting_title">Quick settings</string>
@@ -529,7 +529,7 @@
     <string name="mjdl_json_error_title">Game metadata error</string>
     <string name="mjdl_json_error_subtitle_1">The data for this version is not available. Check your Internet connection or reinstall it.</string>
     <string name="mjdl_json_error_subtitle_3">The data for this version is corrupt. Turn on game manifest verification and try downloading again.</string>
-    <string name="mjdl_json_error_subtitle_2">The data for this version is malformed. Please report this on our GitHub or on the Discord. (%s)</string>
+    <string name="mjdl_json_error_subtitle_2">The data for this version is malformed. Please report this on our GitHub. (%s)</string>
     <string name="mjdl_native_error_title">Game library error</string>
     <string name="mjdl_native_error_subtitle_1">The library %s requires code for %s, but it is not included.</string>
     <string name="mjdl_native_error_subtitle_2">Failed to extract native libraries</string>
@@ -540,7 +540,7 @@
     <string name="mjdl_disk_error_subtitle_2">Failed to save instance after updating the Java Runtime.</string>
     <string name="mjdl_download_error_title">Download error</string>
     <string name="mjdl_download_error_subtitle">Download failed. Check your internet connection and make sure that you have enough free disk space.</string>
-    <string name="mjdl_download_error_subtitle_2">File verification failed. Please try again. If this is a modded version, please try reinstalling. Otherwise, if this error keeps happening, contact us on GitHub or on Discord.</string>
+    <string name="mjdl_download_error_subtitle_2">File verification failed. Please try again. If this is a modded version, please try reinstalling. Otherwise, if this error keeps happening, contact us on GitHub.</string>
     <string name="bta_configuring">Configuring BTA…</string>
     <string name="pref_blocklist_disable_title">Disable server blocklist</string>
     <string name="pref_blocklist_disable_description">Prevent the MC server blocklist from loading. This allows you to play on blocked servers (like 6b6t.org)</string>

@@ -18,8 +18,9 @@ import git.artdeell.mojo.Tools;
 import git.artdeell.mojo.multirt.MultiRTUtils;
 import git.artdeell.mojo.utils.GpuUtils;
 import git.artdeell.mojo.utils.JREUtils;
-
+import java.io.File;
 import java.io.IOException;
+import android.os.Environment;
 
 import git.artdeell.mojo.R;
 
@@ -102,6 +103,12 @@ public class LauncherPreferences {
     public static void loadPreferences(Context ctx) {
         //Required for CTRLDEF_FILE and MultiRT
         Tools.initStorageConstants(ctx);
+        if (DEFAULT_PREF == null) {
+            DEFAULT_PREF = androidx.preference.PreferenceManager.getDefaultSharedPreferences(ctx);
+        }
+
+        DeviceAutoConfig.runAutoConfigIfNeeded(ctx);
+
         boolean isDevicePowerful = isDevicePowerful(ctx);
 
         PREF_RENDERER = DEFAULT_PREF.getString("renderer", "opengles2");
@@ -163,16 +170,34 @@ public class LauncherPreferences {
                 PREF_DEFAULT_RUNTIME = "";
                 return;
             }
-            PREF_DEFAULT_RUNTIME = MultiRTUtils.getRuntimes().get(0).name;
+            String selected = null;
+            for (git.artdeell.mojo.multirt.Runtime rt : MultiRTUtils.getRuntimes()) {
+                if ("Internal".equals(rt.name) && rt.javaVersion >= 17) {
+                    selected = rt.name;
+                    break;
+                }
+            }
+            if (selected == null) {
+                for (git.artdeell.mojo.multirt.Runtime rt : MultiRTUtils.getRuntimes()) {
+                    if (rt.javaVersion >= 17) {
+                        selected = rt.name;
+                        break;
+                    }
+                }
+            }
+            if (selected == null) {
+                selected = MultiRTUtils.getRuntimes().get(0).name;
+            }
+            PREF_DEFAULT_RUNTIME = selected;
             LauncherPreferences.DEFAULT_PREF.edit().putString("defaultRuntime",LauncherPreferences.PREF_DEFAULT_RUNTIME).apply();
         }
 
         PREF_GAME_DIR = DEFAULT_PREF.getString(PREF_KEY_GAME_DIR, null);
         if (PREF_GAME_DIR == null || !hasValidGameDirectory()) {
             String[] candidatePaths = {
-                "/SoSMobile",
-                android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/SongsOfSyx",
-                android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/SongsOfSyx",
+                new File(Environment.getExternalStorageDirectory(), "SoSMobile").getAbsolutePath(),
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/SongsOfSyx",
+                Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/SongsOfSyx",
                 ctx.getExternalFilesDir(null) != null ? ctx.getExternalFilesDir(null).getAbsolutePath() + "/SongsOfSyx" : null
             };
             for (String cand : candidatePaths) {
@@ -185,26 +210,13 @@ public class LauncherPreferences {
     }
 
     /**
-     * This functions aims at finding the best default RAM amount,
-     * according to the RAM amount of the physical device.
-     * Put not enough RAM ? Minecraft will lag and crash.
-     * Put too much RAM ?
-     * The GC will lag, android won't be able to breathe properly.
+     * This function finds the best default RAM amount according to the 7-tier scale
+     * tailored for Songs of Syx.
      * @param ctx Context needed to get the total memory of the device.
      * @return The best default value found.
      */
-    private static int findBestRAMAllocation(Context ctx){
-        int deviceRam = Tools.getTotalDeviceMemory(ctx);
-        if (deviceRam < 1024) return 296;
-        if (deviceRam < 1536) return 448;
-        if (deviceRam < 2048) return 656;
-        // Limit the max for 32 bits devices more harshly
-        if (is32BitsDevice()) return 696;
-
-        if (deviceRam < 3064) return 936;
-        if (deviceRam < 4096) return 1144;
-        if (deviceRam < 6144) return 1536;
-        return 2048; //Default RAM allocation for 64 bits
+    public static int findBestRAMAllocation(Context ctx){
+        return DeviceAutoConfig.computeOptimalRam(Tools.getTotalDeviceMemory(ctx));
     }
 
     /// Find a correct resolution for the device
@@ -220,7 +232,8 @@ public class LauncherPreferences {
         float ratio = (100f * targetSide / minSide);
         // The value must match the seekbar values
         int increment = context.getResources().getInteger(R.integer.resolution_seekbar_increment);
-        return (int) (Math.ceil(ratio / increment) * increment);
+        int calculated = (int) (Math.ceil(ratio / increment) * increment);
+        return Math.max(25, Math.min(100, calculated));
     }
 
     /// Check if the device is considered powerful.

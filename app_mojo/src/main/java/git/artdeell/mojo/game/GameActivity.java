@@ -436,7 +436,11 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
         JREUtils.redirectAndPrintJRELog();
         GameRunner.launchGame(this, instance, versionId, classpath, mGameRenderer);
         //Note that we actually stall in the above function, even if the game crashes. But let's be safe.
-        Tools.runOnUiThread(()-> mServiceBinder.isActive = false);
+        Tools.runOnUiThread(() -> {
+            if (mServiceBinder != null) {
+                mServiceBinder.isActive = false;
+            }
+        });
     }
 
     private void dialogSendCustomKey() {

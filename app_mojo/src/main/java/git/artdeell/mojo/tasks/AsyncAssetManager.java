@@ -11,6 +11,7 @@ import android.util.Log;
 import com.kdt.mcgui.ProgressLayout;
 
 import git.artdeell.mojo.Tools;
+import git.artdeell.mojo.mods.SyxModSettings;
 import git.artdeell.mojo.multirt.MultiRTUtils;
 
 import org.apache.commons.io.FileUtils;
@@ -21,13 +22,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 public class AsyncAssetManager {
 
     private AsyncAssetManager(){}
 
     /**
-     * Attempt to install the java 8 runtime, if necessary
+     * Attempt to install the java 17 runtime, if necessary
      * @param am App context
      */
     public static void unpackRuntime(AssetManager am) {
@@ -39,7 +41,7 @@ public class AsyncAssetManager {
         } catch (IOException e) {
             Log.e("JREAuto", "JRE was not included on this APK.", e);
         }
-        String exactJREName = MultiRTUtils.getExactJreName(8);
+        String exactJREName = MultiRTUtils.getExactJreName(17);
         if(current_rt_version == null && exactJREName != null && !exactJREName.equals("Internal")/*this clause is for when the internal runtime is goofed*/) return;
         if(rt_version == null) return;
         if(rt_version.equals(current_rt_version)) return;
@@ -79,6 +81,7 @@ public class AsyncAssetManager {
         sExecutorService.execute(() -> {
             tryUnpackComponent(ctx, "caciocavallo", false);
             tryUnpackComponent(ctx, "caciocavallo17", false);
+            extractDefaultSettings(ctx);
             ProgressLayout.clearProgress(ProgressLayout.EXTRACT_COMPONENTS);
         });
     }
@@ -140,7 +143,20 @@ public class AsyncAssetManager {
         Tools.write(new File(componentTarget, "version"), builtinVersion);
     }
 
-    public static void extractDefaultSettings(Context context, File gamedir)  {
-        // No-op for Songs of Syx
+    public static void extractDefaultSettings(Context context) {
+        File homeDir = (Tools.DIR_GAME_HOME != null && !Tools.DIR_GAME_HOME.isEmpty())
+                ? new File(Tools.DIR_GAME_HOME)
+                : new File(System.getProperty("user.home", "."));
+        extractDefaultSettings(context, homeDir);
+    }
+
+    public static void extractDefaultSettings(Context context, File gamedir) {
+        File homeDir = (Tools.DIR_GAME_HOME != null && !Tools.DIR_GAME_HOME.isEmpty())
+                ? new File(Tools.DIR_GAME_HOME)
+                : (gamedir != null ? gamedir : new File(System.getProperty("user.home", ".")));
+        File settingsFile = SyxModSettings.getSettingsFile(homeDir);
+        if (!settingsFile.exists() || settingsFile.length() == 0) {
+            SyxModSettings.saveActiveMods(homeDir, Collections.emptyList());
+        }
     }
 }

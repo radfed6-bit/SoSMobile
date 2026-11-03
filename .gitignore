@@ -36,3 +36,6 @@ app_mojo/.cxx/
 app_mojo/src/main/assets/components/jre
 /app_mojo/src/main/assets/components/jre-new/
 /app_mojo/src/main/assets/components/jre-21/
+.agents/
+__pycache__/
+*.pyc

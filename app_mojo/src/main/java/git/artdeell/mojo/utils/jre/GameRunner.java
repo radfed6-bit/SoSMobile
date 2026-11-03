@@ -1,8 +1,11 @@
 package git.artdeell.mojo.utils.jre;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
+import git.artdeell.mojo.tasks.AsyncAssetManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,8 +84,10 @@ public class GameRunner {
             gameDir = instance.getGameDirectory().getAbsolutePath();
         }
         if (gameDir == null) {
-            gameDir = "/SoSMobile";
+            gameDir = new File(Environment.getExternalStorageDirectory(), "SoSMobile").getAbsolutePath();
         }
+
+        AsyncAssetManager.extractDefaultSettings(activity);
 
         List<String> customArgs = new ArrayList<>();
         if (LauncherPreferences.PREF_CUSTOM_JAVA_ARGS != null && !LauncherPreferences.PREF_CUSTOM_JAVA_ARGS.trim().isEmpty()) {
@@ -123,7 +128,11 @@ public class GameRunner {
             String dirPath = versionSpecificNativesDir.getAbsolutePath();
             javaArgList.add("-Djava.library.path=" + dirPath + ":" + Tools.NATIVE_LIB_DIR);
             javaArgList.add("-Djna.boot.library.path=" + dirPath);
-            javaArgList.add("-Dorg.lwjgl.librarypath=" + dirPath);
+            javaArgList.add("-Dorg.lwjgl.librarypath=" + dirPath + ":" + Tools.NATIVE_LIB_DIR);
+        } else {
+            javaArgList.add("-Djava.library.path=" + Tools.NATIVE_LIB_DIR);
+            javaArgList.add("-Djna.boot.library.path=" + Tools.NATIVE_LIB_DIR);
+            javaArgList.add("-Dorg.lwjgl.librarypath=" + Tools.NATIVE_LIB_DIR);
         }
 
         File lwjglExtractDir = new File(Tools.DIR_CACHE, "lwjgl_native/" + versionId);
@@ -166,7 +175,10 @@ public class GameRunner {
         String profileRuntime = instance != null ? instance.selectedRuntime : null;
         Runtime pickedRuntime = runtime != null ? MultiRTUtils.read(runtime) : null;
         if(runtime == null || pickedRuntime == null || pickedRuntime.javaVersion == 0 || pickedRuntime.javaVersion < targetJavaVersion) {
-            String preferredRuntime = MultiRTUtils.getNearestJreName(targetJavaVersion);
+            Runtime internalRuntime = MultiRTUtils.read("Internal");
+            String preferredRuntime = (internalRuntime != null && internalRuntime.javaVersion >= targetJavaVersion)
+                    ? "Internal"
+                    : MultiRTUtils.getNearestJreName(targetJavaVersion);
             if(preferredRuntime == null) throw new RuntimeException("Songs of Syx requires Java 17 or Java 21 runtime.");
             if(profileRuntime != null && instance != null) {
                 instance.selectedRuntime = preferredRuntime;
